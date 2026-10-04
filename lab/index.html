@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Photo lab — Ashframe</title>
+  <meta name="description" content="Edit photos privately in your browser: black and white, tone, film grain, scanlines and glitch. Nothing is uploaded.">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="../assets/brand/icon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="../assets/brand/icon-192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png">
+  <link rel="preload" href="../assets/fonts/hanken-grotesk-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/lab.css">
+  <script type="module" src="../js/lab.js"></script>
+</head>
+<body>
+  <header class="bar">
+    <div class="crumbs">
+      <a class="wordmark" href="../"><img class="wordmark-icon" src="../assets/brand/icon-64.png" width="32" height="32" alt="">ashframe</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <h1 class="page-title">Photo lab</h1>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn" id="open">Open</button>
+      <button type="button" class="btn" id="compare" disabled
+              title="Hold to see the original (or hold the \ key)">Compare</button>
+      <button type="button" class="btn btn-primary" id="export" disabled>Export</button>
+    </div>
+    <!-- Opened by the Open button and the drop zone; hidden from assistive tech to avoid a duplicate control -->
+    <input type="file" id="file" class="visually-hidden" tabindex="-1" aria-hidden="true" aria-label="Open image"
+           accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp">
+  </header>
+
+  <main class="lab">
+    <section class="stage" id="stage" aria-label="Preview">
+      <button type="button" class="drop" id="drop">
+        <span class="drop-frame" aria-hidden="true"></span>
+        <span class="drop-title">Drop a photo here</span>
+        <span class="drop-sub">or choose one from your device. JPG, PNG or WebP.</span>
+      </button>
+      <canvas id="view" hidden aria-label="Processed preview"></canvas>
+      <p class="readout" id="readout" hidden></p>
+      <div class="drag-hint" aria-hidden="true">Release to open</div>
+      <div class="developing" id="developing" hidden aria-hidden="true"></div>
+    </section>
+
+    <aside class="panel" id="panel" aria-label="Controls">
+      <div id="effects"></div>
+
+      <section class="fx" aria-labelledby="out-title">
+        <div class="fx-head">
+          <h2 class="fx-title" id="out-title">Output</h2>
+        </div>
+        <div class="ctl">
+          <label for="format">Format</label>
+          <select id="format">
+            <option value="image/png">PNG</option>
+            <option value="image/jpeg">JPEG</option>
+            <option value="image/webp">WebP</option>
+          </select>
+        </div>
+        <div class="ctl" id="quality-row" hidden>
+          <div class="ctl-row">
+            <label for="quality">Quality</label>
+            <output for="quality" id="quality-out" aria-hidden="true">92</output>
+          </div>
+          <input type="range" id="quality" min="50" max="100" step="1" value="92">
+        </div>
+        <p class="note" id="export-size">Exports up to 4000 px on the long side.</p>
+      </section>
+
+      <div class="panel-foot">
+        <button type="button" class="btn" id="reseed" title="New random layout for grain and glitch">Reseed</button>
+        <button type="button" class="btn" id="reset-all">Reset all</button>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="status">
+    <span id="status" role="status" aria-live="polite">Ready</span>
+    <span class="privacy">Your photo stays on this device.</span>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,531 @@
+/* ==========================================================
+   Photo lab (lab/index.html). Builds on base.css tokens.
+
+   Layout: header bar, then the stage (photo on a grey backdrop)
+   beside the control panel; stacked on narrow screens.
+   Each effect carries its own film-tone swatch (--tone, set
+   from EFFECTS in js/state.js).
+   ========================================================== */
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100dvh;
+}
+
+/* ---------- Header bar ---------- */
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  min-height: 64px;
+  padding: 12px var(--gutter);
+  padding-top: max(12px, env(safe-area-inset-top));
+  border-bottom: 1px solid var(--line);
+}
+
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.crumb-sep {
+  color: var(--faint);
+  font-size: var(--t-lg);
+  font-weight: 300;
+}
+
+.page-title {
+  font-size: var(--t-lg);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ---------- Layout ---------- */
+
+.lab {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  min-height: 0;
+}
+
+/* ---------- Stage ---------- */
+
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  padding: clamp(16px, 3vw, 40px);
+  padding-bottom: 40px; /* room for the size readout under tall photos */
+  overflow: hidden;
+  background: var(--backdrop);
+  /* The home page's print morphs into this frame */
+  view-transition-name: frame;
+}
+
+#view {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: min(520px, 100%);
+  aspect-ratio: 4 / 3;
+  padding: 24px;
+  border: 1px dashed var(--faint);
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  transition: border-color var(--fast) var(--ease), background-color var(--fast) var(--ease);
+}
+
+/* A small empty frame with a horizon: the same mark as the logo */
+.drop-frame {
+  width: 64px;
+  height: 48px;
+  margin-bottom: 16px;
+  border: 1.5px solid var(--ink);
+  background: linear-gradient(var(--ink), var(--ink)) center 58% / 100% 1.5px no-repeat;
+  transition: background-color var(--slow) var(--ease), transform var(--slow) var(--ease);
+}
+
+.drop-title {
+  font-size: var(--t-xl);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.drop-sub {
+  color: var(--muted);
+  font-size: var(--t-sm);
+}
+
+.drop:hover {
+  border-color: var(--ink);
+  background: var(--paper);
+}
+
+.drop:hover .drop-frame {
+  background-color: var(--mist);
+  transform: translateY(-2px);
+}
+
+.readout {
+  position: absolute;
+  left: clamp(16px, 3vw, 40px);
+  bottom: 12px;
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--t-xs);
+}
+
+.stage.comparing .readout::after {
+  content: ", showing the original";
+  color: var(--ink);
+}
+
+.drag-hint {
+  position: absolute;
+  inset: 12px;
+  display: none;
+  place-items: center;
+  border: 1px solid var(--ink);
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  font-size: var(--t-xl);
+  letter-spacing: -0.02em;
+  pointer-events: none;
+}
+
+.stage.dragging .drag-hint {
+  display: grid;
+}
+
+/* Export progress: a thin band of film tones drifting across the top */
+.developing {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--mist), var(--sage), var(--rose), var(--sand), var(--mist));
+  background-size: 200% 100%;
+  animation: drift 1.2s linear infinite;
+}
+
+@keyframes drift {
+  to { background-position: -200% 0; }
+}
+
+/* ---------- Control panel ---------- */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  border-left: 1px solid var(--line);
+  background: var(--paper);
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
+/* lab.js builds the effect controls after load; keep the panel invisible
+   until then so the page doesn't jump (layout shift) when they appear. */
+.panel:not(.ready) {
+  visibility: hidden;
+}
+
+.fx {
+  padding: 20px 24px 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.fx-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.fx-title {
+  margin: 0;
+  font-size: var(--t-md);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* Switch + swatch + title; the whole row toggles the effect */
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.toggle input {
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 32px;
+  height: 18px;
+  margin: 0 4px 0 0;
+  border-radius: 999px;
+  background: var(--line);
+  cursor: pointer;
+  transition: background-color var(--fast) var(--ease);
+}
+
+.toggle input::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+  transition: transform var(--fast) var(--ease);
+}
+
+.toggle input:checked {
+  background: var(--ink);
+}
+
+.toggle input:checked::after {
+  background: var(--paper);
+  transform: translateX(14px);
+}
+
+.mini {
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: var(--t-sm);
+  cursor: pointer;
+}
+
+.mini:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.ctl {
+  display: grid;
+  gap: 2px;
+  margin-top: 12px;
+  transition: opacity var(--fast) var(--ease);
+}
+
+.ctl-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.ctl label {
+  font-size: var(--t-sm);
+}
+
+.ctl output {
+  color: var(--muted);
+  font-size: var(--t-sm);
+}
+
+/* Switched-off effects: dim the sliders, keep the text readable */
+.fx.off .ctl label,
+.fx.off .ctl output {
+  color: var(--muted);
+}
+
+.fx.off .ctl input[type="range"] {
+  opacity: 0.35;
+}
+
+.ctl select {
+  height: 36px;
+  margin-top: 4px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+}
+
+.note {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: var(--t-xs);
+}
+
+.panel-foot {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding: 20px 24px;
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
+}
+
+.panel-foot .btn {
+  flex: 1;
+}
+
+/* ---------- Range slider ----------
+   Thin track filled up to the thumb. lab.js sets --p (0–100%) on each
+   slider, since WebKit has no native "progress" part. */
+
+input[type="range"] {
+  appearance: none;
+  width: 100%;
+  height: 24px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 1px;
+  background:
+    linear-gradient(var(--ink), var(--ink)) 0 0 / var(--p, 50%) 100% no-repeat,
+    var(--line);
+}
+
+input[type="range"]::-moz-range-track {
+  height: 2px;
+  border-radius: 1px;
+  background: var(--line);
+}
+
+input[type="range"]::-moz-range-progress {
+  height: 2px;
+  border-radius: 1px;
+  background: var(--ink);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -6px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  transition: transform var(--fast) var(--ease);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  transition: transform var(--fast) var(--ease);
+}
+
+input[type="range"]:active::-webkit-slider-thumb {
+  transform: scale(1.3);
+}
+
+input[type="range"]:active::-moz-range-thumb {
+  transform: scale(1.3);
+}
+
+/* ---------- Status bar ---------- */
+
+.status {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  padding: 10px var(--gutter);
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: var(--t-xs);
+}
+
+#status {
+  color: var(--ink);
+}
+
+/* ---------- Touch screens ----------
+   Phones and tablets get larger text and finger-sized controls
+   (44px tap targets, per Apple's guidelines). Mouse and trackpad
+   users keep the compact sizes above. */
+
+@media (pointer: coarse) {
+  .btn {
+    height: 44px;
+    padding: 0 18px;
+    font-size: var(--t-md);
+  }
+
+  .fx {
+    padding: 18px 20px 22px;
+  }
+
+  .fx-title {
+    font-size: var(--t-lg);
+  }
+
+  /* The whole label row is the tap target, not just the switch */
+  .toggle {
+    min-height: 44px;
+    gap: 12px;
+    padding-right: 12px;
+  }
+
+  .toggle input {
+    width: 44px;
+    height: 26px;
+  }
+
+  .toggle input::after {
+    width: 22px;
+    height: 22px;
+  }
+
+  .toggle input:checked::after {
+    transform: translateX(18px);
+  }
+
+  .mini {
+    min-height: 44px;
+    padding: 0 0 0 20px;
+    font-size: var(--t-md);
+  }
+
+  .ctl {
+    margin-top: 14px;
+  }
+
+  .ctl label,
+  .ctl output {
+    font-size: var(--t-md);
+  }
+
+  /* 16px stops iOS Safari from zooming in when the select is tapped */
+  .ctl select {
+    height: 44px;
+    font-size: 16px;
+  }
+
+  input[type="range"] {
+    height: 40px;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+    margin-top: -11px;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+  }
+
+  .note,
+  .status {
+    font-size: var(--t-sm);
+  }
+}
+
+/* ---------- Narrow screens ---------- */
+
+@media (max-width: 860px) {
+  body {
+    height: auto;
+  }
+
+  .lab {
+    grid-template-columns: 1fr;
+  }
+
+  .stage {
+    height: 60vh;
+    min-height: 320px;
+  }
+
+  .panel {
+    overflow: visible;
+    border-left: 0;
+  }
+
+  /* Stacked layout: also reserve height, so the status bar below starts
+     off-screen instead of being pushed down when the controls appear. */
+  .panel:not(.ready) {
+    min-height: 100vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .actions {
+    width: 100%;
+  }
+
+  .actions .btn {
+    flex: 1;
+    padding: 0 10px;
+  }
+}
