@@ -1,5 +1,6 @@
 /**
- * @file App entry point: builds the control panel and wires up the UI.
+ * @file Photo lab entry point (lab/index.html): builds the control panel
+ * and wires up the UI.
  *
  * Flow:
  *   1. The user opens, drops or pastes an image. loadFile() decodes it once
@@ -25,7 +26,6 @@ const EXTENSIONS = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'web
 
 const $ = (id) => document.getElementById(id);
 const els = {
-  wordmark: $('wordmark'),
   open: $('open'),
   compare: $('compare'),
   export: $('export'),
@@ -43,6 +43,7 @@ const els = {
   reseed: $('reseed'),
   resetAll: $('reset-all'),
   status: $('status'),
+  developing: $('developing'),
 };
 
 const state = createState();
@@ -73,6 +74,9 @@ function buildControls() {
     const section = document.createElement('section');
     section.className = 'fx';
     section.dataset.fx = fx.id;
+    section.setAttribute('role', 'group');
+    section.setAttribute('aria-labelledby', `${fx.id}-title`);
+    section.style.setProperty('--tone', `var(--${fx.tone})`);
 
     const head = document.createElement('div');
     head.className = 'fx-head';
@@ -82,10 +86,15 @@ function buildControls() {
     const toggle = document.createElement('input');
     toggle.type = 'checkbox';
     toggle.id = `${fx.id}-on`;
+    toggle.setAttribute('role', 'switch'); // announced as "on/off" rather than "checked"
     const title = document.createElement('span');
     title.className = 'fx-title';
+    title.id = `${fx.id}-title`;
     title.textContent = fx.label;
-    toggleLabel.append(toggle, title);
+    const swatch = document.createElement('span');
+    swatch.className = 'swatch';
+    swatch.setAttribute('aria-hidden', 'true');
+    toggleLabel.append(toggle, swatch, title);
 
     const reset = document.createElement('button');
     reset.type = 'button';
@@ -101,10 +110,12 @@ function buildControls() {
       const id = `${fx.id}-${p.id}`;
       const row = document.createElement('div');
       row.className = 'ctl';
+      // The visible readout is aria-hidden: the slider's own aria-valuetext
+      // already carries the value, so screen readers don't announce it twice.
       row.innerHTML = `
         <div class="ctl-row">
           <label for="${id}">${p.label}</label>
-          <output for="${id}"></output>
+          <output for="${id}" aria-hidden="true"></output>
         </div>
         <input type="range" id="${id}" min="${p.min}" max="${p.max}" step="${p.step}">`;
       const input = row.querySelector('input');
@@ -112,8 +123,7 @@ function buildControls() {
       input.title = 'Double-click to reset';
 
       input.addEventListener('input', () => {
-        state.effects[fx.id].params[p.id] = Number(input.value);
-        output.value = formatValue(p, Number(input.value));
+        setParam(fx.id, p.id, Number(input.value));
         requestRender();
       });
       input.addEventListener('dblclick', () => {
@@ -139,14 +149,26 @@ function buildControls() {
     els.effects.append(section);
   }
   syncControls();
+  // The panel stays invisible until it's built, so the page doesn't jump
+  // when the controls appear (see .panel:not(.ready) in lab.css).
+  document.getElementById('panel').classList.add('ready');
 }
 
-/** Set a parameter in state and update its slider and readout to match. */
+/** Set a parameter in state and update its slider, readout and spoken value to match. */
 function setParam(fxId, paramId, value) {
   const c = controls[fxId].inputs[paramId];
+  const text = formatValue(c.def, value);
   state.effects[fxId].params[paramId] = value;
   c.input.value = value;
-  c.output.value = formatValue(c.def, value);
+  c.input.setAttribute('aria-valuetext', text);
+  c.output.value = text;
+  setFill(c.input);
+}
+
+/** Tell the slider track how far to fill (CSS var --p), since WebKit can't style progress natively. */
+function setFill(input) {
+  const pct = ((input.value - input.min) / (input.max - input.min)) * 100;
+  input.style.setProperty('--p', `${pct}%`);
 }
 
 /** Push the whole `state` into the panel (after resets). */
@@ -160,6 +182,7 @@ function syncControls() {
   }
 }
 
+/** Restore one effect's defaults (switch state and every slider). */
 function resetEffect(fx) {
   state.effects[fx.id] = defaultEffect(fx);
   syncControls();
@@ -207,12 +230,15 @@ function setStatus(text) {
   els.status.textContent = text;
 }
 
-/** Brief glitch on the wordmark when an image loads (CSS disables it for reduced motion). */
-function flicker() {
-  els.wordmark.classList.remove('flicker');
-  void els.wordmark.offsetWidth; // restart the animation
-  els.wordmark.classList.add('flicker');
+/** Play the "developing print" reveal on the preview (base.css; off for reduced motion). */
+function develop() {
+  els.view.classList.remove('develop');
+  void els.view.offsetWidth; // restart the animation
+  els.view.classList.add('develop');
 }
+
+/** "4000 × 2667" */
+const dims = (w, h) => `${w} × ${h}`;
 
 /**
  * Validate and decode a file, build the preview copy and show it.
@@ -223,10 +249,10 @@ function flicker() {
 async function loadFile(file) {
   if (!file) return;
   if (!isAccepted(file)) {
-    setStatus('UNSUPPORTED FILE · USE JPG, PNG OR WEBP');
+    setStatus(`Can't open ${file.name}. Choose a JPG, PNG or WebP photo.`);
     return;
   }
-  setStatus('DECODING…');
+  setStatus(`Opening ${file.name}…`);
   try {
     const img = await decode(file);
     if (original && original.close) original.close(); // free the previous ImageBitmap
@@ -236,8 +262,8 @@ async function loadFile(file) {
 
     const full = sizeOf(original);
     const out = fit(full, EXPORT_MAX);
-    els.readout.textContent = `${full.width}×${full.height} · preview ${preview.width}×${preview.height}`;
-    els.exportSize.textContent = `Export: ${out.width}×${out.height} px (max ${EXPORT_MAX} on the long side).`;
+    els.readout.textContent = `${dims(full.width, full.height)} original, editing a ${dims(preview.width, preview.height)} preview`;
+    els.exportSize.textContent = `Exports at ${dims(out.width, out.height)} px (up to ${EXPORT_MAX} on the long side).`;
 
     els.drop.hidden = true;
     els.view.hidden = false;
@@ -247,11 +273,11 @@ async function loadFile(file) {
     els.stage.classList.add('loaded');
 
     draw();
-    flicker();
-    setStatus(`LOADED ${baseName.toUpperCase()} · ${full.width}×${full.height}`);
+    develop();
+    setStatus(`Opened ${file.name}, ${dims(full.width, full.height)}`);
   } catch (err) {
     console.error(err);
-    setStatus('COULD NOT DECODE IMAGE');
+    setStatus(`Can't read ${file.name}. The file may be damaged; try another photo.`);
   }
 }
 
@@ -268,8 +294,9 @@ async function exportImage() {
   if (!original || busy) return;
   busy = true;
   els.export.disabled = true;
-  els.export.textContent = 'Working…';
-  setStatus('EXPORTING…');
+  els.export.textContent = 'Exporting…';
+  els.developing.hidden = false;
+  setStatus('Exporting at full size…');
   // Let the status paint before the heavy synchronous work starts.
   await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
 
@@ -281,16 +308,18 @@ async function exportImage() {
     const type = els.format.value;
     const quality = Number(els.quality.value) / 100;
     const blob = await canvasToBlob(out, type, quality);
-    download(blob, `ashframe-${baseName}.${EXTENSIONS[type]}`);
-    setStatus(`EXPORTED ${out.width}×${out.height} ${EXTENSIONS[type].toUpperCase()}`);
+    const name = `ashframe-${baseName}.${EXTENSIONS[type]}`;
+    download(blob, name);
+    setStatus(`Exported ${name}, ${dims(out.width, out.height)}`);
   } catch (err) {
     console.error(err);
-    setStatus('EXPORT FAILED');
+    setStatus('Export failed. Try PNG or JPEG, or a smaller photo.');
   } finally {
     // Release the large backing stores right away.
     if (source) source.width = source.height = 0;
     out.width = out.height = 0;
     busy = false;
+    els.developing.hidden = true;
     els.export.disabled = false;
     els.export.textContent = 'Export';
   }
@@ -366,18 +395,20 @@ function bindEvents() {
   });
   els.quality.addEventListener('input', () => {
     els.qualityOut.value = els.quality.value;
+    setFill(els.quality);
   });
+  setFill(els.quality);
 
   els.reseed.addEventListener('click', () => {
     state.seed = randomSeed();
     requestRender();
-    setStatus(`SEED ${state.seed.toString(16).toUpperCase().padStart(8, '0')}`);
+    setStatus('New grain and glitch pattern');
   });
   els.resetAll.addEventListener('click', () => {
     for (const fx of EFFECTS) state.effects[fx.id] = defaultEffect(fx);
     syncControls();
     requestRender();
-    setStatus('RESET');
+    setStatus('All effects reset');
   });
 }
 

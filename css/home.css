@@ -1,0 +1,265 @@
+/* ==========================================================
+   Home page: wordmark, the developing print, the tool strip.
+   The print is the one bold element; everything else stays quiet.
+   ========================================================== */
+
+.home {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--gutter);
+  padding-top: max(var(--gutter), env(safe-area-inset-top));
+}
+
+/* ---------- Intro ---------- */
+
+.intro {
+  --intro-gap: clamp(28px, 4vw, 48px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    "display display mascot"
+    "lede    cta     mascot";
+  align-items: end;
+  column-gap: 32px;
+  row-gap: 24px;
+  margin-bottom: var(--intro-gap);
+}
+
+/* The mascot stands at the right, her faded sweater resting on the photo's
+   top edge. She develops in just before the print does. */
+.mascot {
+  grid-area: mascot;
+  align-self: end;
+  width: auto;
+  height: clamp(220px, 24vw, 340px);
+  margin-bottom: calc(-1 * var(--intro-gap));
+  animation: develop 2s var(--ease) both;
+}
+
+/* The wordmark as the headline: huge, light, tightly set lowercase */
+.display {
+  grid-area: display;
+  font-size: clamp(4.5rem, 17vw, 14rem);
+  font-weight: 250;
+  line-height: 0.8;
+  letter-spacing: -0.065em;
+  /* optical correction: big light type sits visually right of the margin */
+  margin-left: -0.05em;
+}
+
+.lede {
+  grid-area: lede;
+  max-width: 34ch;
+  font-size: var(--t-lg);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+.cta {
+  grid-area: cta;
+  height: 44px;
+  padding: 0 24px;
+  font-size: var(--t-md);
+}
+
+/* ---------- The print ---------- */
+
+.print {
+  margin: 0 0 clamp(56px, 8vw, 112px);
+}
+
+.print-frame {
+  aspect-ratio: 21 / 9;
+  background: var(--backdrop);
+  overflow: hidden;
+  /* Morphs into the lab's stage when you open the photo lab */
+  view-transition-name: frame;
+}
+
+.print-frame canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Hidden until home.js has painted it, then .develop plays */
+.print-frame canvas:not(.develop) {
+  opacity: 0;
+}
+
+.print figcaption {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: var(--t-xs);
+}
+
+/* ---------- Tools: a strip of film frames ---------- */
+
+.tools h2 {
+  margin-bottom: 20px;
+  font-size: var(--t-xl);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 24px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.frame {
+  position: relative;
+}
+
+.frame-link {
+  display: block;
+  text-decoration: none;
+}
+
+.frame-thumb {
+  display: block;
+  aspect-ratio: 4 / 3;
+  margin-bottom: 14px;
+  background: var(--backdrop);
+  overflow: hidden;
+}
+
+.frame-thumb canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--slow) var(--ease);
+}
+
+/* Frame number, like the edge print on a negative */
+.frame-no {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  z-index: 1;
+  /* White with a soft shadow: readable on any part of the photo, in either theme */
+  color: #ffffff;
+  font-size: var(--t-xs);
+  font-weight: 500;
+  text-shadow: 0 0 6px rgb(0 0 0 / 0.7);
+}
+
+.frame-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--t-lg);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.frame-desc {
+  display: block;
+  max-width: 36ch;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: var(--t-sm);
+}
+
+.frame-link:hover .frame-thumb canvas {
+  transform: scale(1.035);
+}
+
+.frame-link:hover .frame-name {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+/* Unexposed frames: an empty negative, outlined */
+.frame-empty .frame-thumb {
+  background: transparent;
+  border: 1px dashed var(--faint);
+}
+
+.frame-empty .frame-thumb {
+  display: grid;
+  place-items: center;
+}
+
+/* The mascot keeps the empty frame company until the next tool arrives */
+.frame-icon {
+  width: clamp(56px, 6vw, 88px);
+  height: auto;
+  border-radius: 50%;
+}
+
+.frame-empty .frame-no {
+  color: var(--muted);
+  text-shadow: none;
+}
+
+.frame-empty .frame-name {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* ---------- Footer ---------- */
+
+.site-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  max-width: 1440px;
+  margin: clamp(64px, 10vw, 128px) auto 0;
+  padding: 24px var(--gutter);
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: var(--t-sm);
+}
+
+/* ---------- Narrow screens ---------- */
+
+@media (max-width: 760px) {
+  .intro {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "display display"
+      "lede    lede"
+      "cta     mascot";
+    row-gap: 20px;
+  }
+
+  .mascot {
+    height: 170px;
+  }
+
+  /* Let the wordmark run the full width of the phone */
+  .display {
+    font-size: 26vw;
+  }
+
+  .cta {
+    justify-self: start;
+  }
+
+  .print-frame {
+    aspect-ratio: 4 / 5;
+  }
+
+  .strip {
+    grid-template-columns: 1fr;
+  }
+
+  /* One empty frame is enough to say "more coming" on a phone */
+  .frame-empty + .frame-empty {
+    display: none;
+  }
+
+  .frame-empty .frame-thumb {
+    aspect-ratio: 4 / 1;
+  }
+}

@@ -1,8 +1,10 @@
 # Ashframe
 
-**A monochrome photo lab that runs entirely in your browser.**
+**A darkroom in your browser.**
 
-Ashframe is an open-source, dark, minimal image editor for black-and-white, film grain, scanline and glitch looks. Drop in a photo, push the sliders, watch the preview update live, and export. Everything happens on your device in an HTML canvas. Your images are never uploaded anywhere.
+Ashframe is a growing set of open-source photo tools that run entirely on your device. The first is the **Photo lab**, for black-and-white, film grain, scanline and glitch looks. Drop in a photo, push the sliders, watch the preview update live, and export. Everything happens in an HTML canvas, and your images are never uploaded anywhere.
+
+The home page lists the available tools. More will be added over time.
 
 **[Live demo →](https://concord808030-tech.github.io/Ashframe/)**
 
@@ -17,7 +19,8 @@ Ashframe is an open-source, dark, minimal image editor for black-and-white, film
 - **Consistent results:** effect sizes scale with the image, and grain and glitch use a seeded random generator. The export keeps the same look and layout as the preview.
 - **Compare:** hold the Compare button (or the `\` key) to see the original.
 - **Reseed:** pick a new random layout for grain and glitch.
-- **Accessible:** keyboard-friendly, with visible focus states. It respects `prefers-reduced-motion`.
+- **Elegant black and white UI:** light by default, dark when your device is in dark mode. It comes with a few quiet animations: the home photo develops like a print, and the page morphs into the photo lab.
+- **Accessible:** Lighthouse scores 100. It's keyboard-friendly, works with screen readers, has touch-sized controls on phones, and respects `prefers-reduced-motion`.
 - **No build step:** plain HTML, CSS and JavaScript (ES modules).
 
 ### Effects
@@ -45,7 +48,7 @@ python -m http.server 8000
 npx serve .
 ```
 
-Then open <http://localhost:8000>.
+Then open <http://localhost:8000> for the home page, or <http://localhost:8000/lab/> for the photo lab.
 
 ## Deploy to GitHub Pages
 
@@ -59,15 +62,20 @@ The empty `.nojekyll` file tells Pages to serve the files as they are.
 ## Project structure
 
 ```
-index.html            app shell
-css/style.css         styles
-js/main.js            UI wiring, preview loop, export
+index.html            home page (title + tool list)
+lab/index.html        the photo lab
+css/base.css          shared design system: tokens, type, buttons, dark mode
+css/home.css          home page styles
+css/lab.css           photo lab styles
+js/home.js            paints and "develops" the home page photo
+js/lab.js             photo lab UI wiring, preview loop, export
 js/state.js           effect definitions and defaults
 js/pipeline.js        shared render pipeline (preview + export)
 js/image-io.js        decoding, scaling, encoding, download
 js/rng.js             seeded PRNG
 js/effects/*.js       one module per effect
-assets/favicon.svg
+assets/brand/         mascot and icons (favicon, Apple touch icon)
+assets/fonts/         Hanken Grotesk (self-hosted, SIL Open Font License)
 docs/ARCHITECTURE.md  how it works, and how to write an effect
 ```
 

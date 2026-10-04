@@ -1,0 +1,275 @@
+/* ==========================================================
+   Ashframe — shared design system (every page loads this)
+
+   Direction: "darkroom, in daylight". Pure white and true black,
+   neutral greys, and the photo as the loudest thing on the page.
+   Colour is used sparingly: five muted film tones that mark
+   tools and effects as small swatches.
+
+   - Tokens live on :root. Dark mode only redefines tokens.
+   - Type: one family (Hanken Grotesk, self-hosted), sentence case.
+   - Photos are sharp-cornered; controls are soft (pills).
+   - All motion is disabled under prefers-reduced-motion.
+   ========================================================== */
+
+/* Self-hosted so the site makes no external requests. SIL OFL, see assets/fonts/OFL.txt */
+@font-face {
+  font-family: "Hanken Grotesk";
+  src: url("../assets/fonts/hanken-grotesk-latin-wght.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Neutrals */
+  --paper: #ffffff;     /* page background */
+  --ink: #000000;       /* primary text, primary buttons */
+  --backdrop: #f0f0f0;  /* behind photos */
+  --surface: #f7f7f7;   /* hover / subtle fills */
+  --line: #e2e2e2;      /* hairlines, slider tracks */
+  --muted: #666666;     /* secondary text: 5:1+ on every neutral above */
+  --faint: #b3b3b3;     /* decorative only, never for text */
+
+  /* Film tones: the "slight colours". Swatches and accents only. */
+  --mist: #9db3c2;
+  --sage: #a9b8a0;
+  --rose: #d3b1a8;
+  --sand: #cbbf9f;
+  --lilac: #b5adc4;
+
+  --font: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
+
+  /* Type scale (major third, 16px base) */
+  --t-xs: 0.75rem;   /* 12 */
+  --t-sm: 0.875rem;  /* 14 */
+  --t-md: 1rem;      /* 16 */
+  --t-lg: 1.25rem;   /* 20 */
+  --t-xl: 1.5625rem; /* 25 */
+
+  --gutter: clamp(16px, 4vw, 48px);
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --fast: 160ms;
+  --slow: 420ms;
+
+  color-scheme: light;
+}
+
+/* Dark mode follows the system setting */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #000000;
+    --ink: #f2f2f2;
+    --backdrop: #141414;
+    --surface: #1a1a1a;
+    --line: #2b2b2b;
+    --muted: #a0a0a0;
+    --faint: #4a4a4a;
+    color-scheme: dark;
+  }
+}
+
+/* Smooth page-to-page morph (home → photo lab) where supported */
+@view-transition {
+  navigation: auto;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* <picture> is only used to swap light/dark artwork; let the <img> inside
+   take part in the surrounding grid or flex layout directly. */
+picture {
+  display: contents;
+}
+
+/* Otherwise Chrome lays <source> out as an empty block (a phantom grid row).
+   Hiding it doesn't affect which image the browser picks. */
+picture > source {
+  display: none;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 var(--t-md) / 1.5 var(--font);
+  font-feature-settings: "ss01", "tnum";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--mist);
+  color: #000;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Wordmark ---------- */
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-weight: 500;
+  font-size: var(--t-lg);
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+
+/* The mascot's face, a black-on-white disc that reads in both themes */
+.wordmark-icon {
+  display: block;
+  width: 1.6em;
+  height: 1.6em;
+  border-radius: 50%;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  height: 36px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color var(--fast) var(--ease), background-color var(--fast) var(--ease),
+    color var(--fast) var(--ease), transform var(--fast) var(--ease);
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--ink);
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  color: var(--faint);
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn-primary:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.btn-primary:disabled {
+  border-color: var(--line);
+  background: var(--surface);
+}
+
+/* ---------- Swatch: a film-tone dot that marks a tool or effect ---------- */
+
+.swatch {
+  display: inline-block;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--tone, var(--faint));
+}
+
+/* ---------- "Developing" reveal ----------
+   A print emerging in the developer tray: starts as bright, flat paper,
+   the shadows arrive first, then full contrast. Used for the home photo
+   and whenever a photo loads in the lab. */
+
+.develop {
+  animation: develop 2.4s var(--ease) both;
+}
+
+@keyframes develop {
+  0% {
+    opacity: 0;
+    filter: brightness(2.2) contrast(0.3) blur(2px);
+  }
+  35% {
+    opacity: 1;
+    filter: brightness(1.5) contrast(0.6) blur(0.5px);
+  }
+  100% {
+    opacity: 1;
+    filter: none;
+  }
+}
+
+/* ---------- Motion off ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
