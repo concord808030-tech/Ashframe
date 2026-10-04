@@ -2,77 +2,72 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ashframe — monochrome photo lab</title>
-  <meta name="description" content="Browser-based monochrome photo lab: black & white, film grain, scanlines and glitch. Runs entirely on your device.">
-  <meta name="color-scheme" content="dark">
-  <meta name="theme-color" content="#0a0a0a">
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/style.css">
-  <script type="module" src="js/main.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ashframe — a darkroom in your browser</title>
+  <meta name="description" content="Free, private photo tools that run entirely in your browser. Black and white, film grain, scanlines and glitch. Nothing is uploaded.">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta property="og:title" content="Ashframe">
+  <meta property="og:description" content="A darkroom in your browser. Private photo tools: nothing is uploaded.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://concord808030-tech.github.io/Ashframe/assets/brand/icon-512.png">
+  <link rel="icon" href="assets/brand/icon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/brand/icon-192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  <link rel="preload" href="assets/fonts/hanken-grotesk-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/home.css">
+  <script type="module" src="js/home.js"></script>
 </head>
 <body>
-  <header class="bar">
-    <div class="brand">
-      <span class="wordmark" id="wordmark" data-text="ASHFRAME">ASHFRAME</span>
-      <span class="tag">v0.1 // photo lab</span>
-    </div>
-    <div class="actions">
-      <button type="button" class="btn" id="open">Open</button>
-      <button type="button" class="btn" id="compare" disabled
-              title="Hold to see the original (or hold the \ key)">Compare</button>
-      <button type="button" class="btn btn-primary" id="export" disabled>Export</button>
-    </div>
-    <input type="file" id="file" class="visually-hidden" tabindex="-1"
-           accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp">
-  </header>
+  <main class="home">
+    <header class="intro">
+      <h1 class="display">ashframe</h1>
+      <!-- Ashframe's mascot: decorative, so hidden from screen readers -->
+      <picture class="mascot-pic">
+        <source srcset="assets/brand/mascot-dark.png" media="(prefers-color-scheme: dark)">
+        <img class="mascot" src="assets/brand/mascot.png" width="616" height="859" alt="" aria-hidden="true">
+      </picture>
+      <p class="lede">A darkroom in your browser. Turn photos black and white, add grain and texture, and export them at full size. Nothing is uploaded.</p>
+      <a class="btn btn-primary cta" href="lab/">Open the photo lab</a>
+    </header>
 
-  <main class="lab">
-    <section class="stage" id="stage" aria-label="Preview">
-      <button type="button" class="drop" id="drop">
-        <span class="drop-title">Drop image</span>
-        <span class="drop-sub">or click to open · JPG · PNG · WEBP</span>
-      </button>
-      <canvas id="view" hidden aria-label="Processed preview"></canvas>
-      <p class="readout" id="readout" hidden></p>
-      <div class="drag-hint" aria-hidden="true">Release to load</div>
-    </section>
-
-    <aside class="panel" aria-label="Controls">
-      <div id="effects"></div>
-
-      <section class="fx" aria-labelledby="out-title">
-        <div class="fx-head">
-          <h2 class="fx-title" id="out-title">Output</h2>
-        </div>
-        <div class="ctl">
-          <label for="format">Format</label>
-          <select id="format">
-            <option value="image/png">PNG</option>
-            <option value="image/jpeg">JPEG</option>
-            <option value="image/webp">WEBP</option>
-          </select>
-        </div>
-        <div class="ctl" id="quality-row" hidden>
-          <div class="ctl-row">
-            <label for="quality">Quality</label>
-            <output for="quality" id="quality-out">92</output>
-          </div>
-          <input type="range" id="quality" min="50" max="100" step="1" value="92">
-        </div>
-        <p class="note" id="export-size">Max 4000 px on the long side.</p>
-      </section>
-
-      <div class="panel-foot">
-        <button type="button" class="btn" id="reseed" title="New random layout for grain and glitch">Reseed</button>
-        <button type="button" class="btn" id="reset-all">Reset all</button>
+    <figure class="print">
+      <div class="print-frame">
+        <canvas id="print" aria-hidden="true"></canvas>
       </div>
-    </aside>
+      <figcaption>Arctic fjord, generated and developed in your browser by Ashframe.</figcaption>
+    </figure>
+
+    <section class="tools" aria-labelledby="tools-title">
+      <h2 id="tools-title">Tools</h2>
+      <!-- Tools as frames on a roll of film. New tools take the next unexposed frame. -->
+      <ol class="strip">
+        <li class="frame frame-live" style="--tone: var(--mist)">
+          <a class="frame-link" href="lab/">
+            <span class="frame-no" aria-hidden="true">1</span>
+            <span class="frame-thumb"><canvas id="thumb" aria-hidden="true"></canvas></span>
+            <span class="frame-name"><span class="swatch" aria-hidden="true"></span>Photo lab</span>
+            <span class="frame-desc">Black and white, tone, film grain, scanlines and glitch.</span>
+          </a>
+        </li>
+        <li class="frame frame-empty">
+          <span class="frame-no" aria-hidden="true">2</span>
+          <span class="frame-thumb"><img class="frame-icon" src="assets/brand/icon-192.png" width="96" height="96" alt=""></span>
+          <span class="frame-name">Unexposed</span>
+          <span class="frame-desc">The next tool is in development.</span>
+        </li>
+        <li class="frame frame-empty" aria-hidden="true">
+          <span class="frame-no">3</span>
+          <span class="frame-thumb"></span>
+        </li>
+      </ol>
+    </section>
   </main>
 
-  <footer class="status">
-    <span class="status-line"><span id="status" role="status" aria-live="polite">READY</span><span class="cursor" aria-hidden="true">_</span></span>
-    <span class="privacy">Local only. Images never leave your device.</span>
+  <footer class="site-foot">
+    <p>Private by design: your photos never leave your device.</p>
+    <p>Open source <a href="https://github.com/concord808030-tech/Ashframe">on GitHub</a>, <a href="https://github.com/concord808030-tech/Ashframe/blob/main/LICENSE">MIT licensed</a>.</p>
   </footer>
 </body>
 </html>
