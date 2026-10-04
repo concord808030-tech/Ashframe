@@ -56,9 +56,22 @@
   color-scheme: light;
 }
 
-/* Dark mode follows the system setting */
+/* Dark mode: the device setting decides, unless the theme toggle has set
+   data-theme on <html> (js/theme.js; an inline script in each page's <head>
+   applies the saved choice before first paint). Keep these two blocks equal. */
+:root[data-theme="dark"] {
+  --paper: #000000;
+  --ink: #f2f2f2;
+  --backdrop: #141414;
+  --surface: #1a1a1a;
+  --line: #2b2b2b;
+  --muted: #a0a0a0;
+  --faint: #4a4a4a;
+  color-scheme: dark;
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --paper: #000000;
     --ink: #f2f2f2;
     --backdrop: #141414;
@@ -67,6 +80,29 @@
     --muted: #a0a0a0;
     --faint: #4a4a4a;
     color-scheme: dark;
+  }
+}
+
+/* Artwork drawn for one theme only (the mascot). Same rule shape as above. */
+.for-dark {
+  display: none !important;
+}
+
+:root[data-theme="dark"] .for-dark {
+  display: block !important;
+}
+
+:root[data-theme="dark"] .for-light {
+  display: none !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .for-dark {
+    display: block !important;
+  }
+
+  :root:not([data-theme="light"]) .for-light {
+    display: none !important;
   }
 }
 
@@ -85,17 +121,6 @@
   display: none !important;
 }
 
-/* <picture> is only used to swap light/dark artwork; let the <img> inside
-   take part in the surrounding grid or flex layout directly. */
-picture {
-  display: contents;
-}
-
-/* Otherwise Chrome lays <source> out as an empty block (a phantom grid row).
-   Hiding it doesn't affect which image the browser picks. */
-picture > source {
-  display: none;
-}
 
 html {
   -webkit-text-size-adjust: 100%;
@@ -222,6 +247,58 @@ select {
 .btn-primary:disabled {
   border-color: var(--line);
   background: var(--surface);
+}
+
+/* ---------- Round icon button (theme toggle, pause) ---------- */
+
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+  cursor: pointer;
+  transition: border-color var(--fast) var(--ease), transform var(--fast) var(--ease);
+}
+
+.icon-btn:hover {
+  border-color: var(--ink);
+}
+
+.icon-btn:active {
+  transform: scale(0.94);
+}
+
+.icon-btn svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+/* Theme toggle: a half-filled circle that turns over when the theme flips */
+.theme-toggle svg {
+  transition: transform var(--slow) var(--ease);
+}
+
+:root[data-theme="dark"] .theme-toggle svg {
+  transform: rotate(180deg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle svg {
+    transform: rotate(180deg);
+  }
+}
+
+@media (pointer: coarse) {
+  .icon-btn {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 /* ---------- Swatch: a film-tone dot that marks a tool or effect ---------- */
