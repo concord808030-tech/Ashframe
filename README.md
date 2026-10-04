@@ -4,7 +4,7 @@
 
 Ashframe is an open-source, dark, minimal image editor for black-and-white, film grain, scanline and glitch looks. Drop in a photo, push the sliders, watch the preview update live, and export. Everything happens on your device in an HTML canvas. Your images are never uploaded anywhere.
 
-**[Live demo →](https://YOUR-USERNAME.github.io/Ashframe/)** *(placeholder: replace with your GitHub Pages URL)*
+**[Live demo →](https://concord808030-tech.github.io/Ashframe/)**
 
 ---
 
@@ -52,7 +52,7 @@ Then open <http://localhost:8000>.
 1. Push this repository to GitHub.
 2. Go to **Settings → Pages**.
 3. Under **Build and deployment**, choose **Deploy from a branch**, then **`main`** and **`/ (root)`**.
-4. After a minute the site is live at `https://<your-username>.github.io/Ashframe/`. Update the demo link above.
+4. After a minute the site is live at `https://<your-username>.github.io/Ashframe/`. If you deploy a fork, update the demo link above.
 
 The empty `.nojekyll` file tells Pages to serve the files as they are.
 
