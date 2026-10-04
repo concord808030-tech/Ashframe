@@ -1,3 +1,108 @@
+# ==========================================================
+# Ashframe — keep personal, local and tool-generated files
+# out of the repository. The site itself is only:
+# index.html, css/, js/, assets/, docs/, README, LICENSE.
+# ==========================================================
+
+# ---------- AI assistants & coding agents ----------
+# Claude / Claude Code
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+.mcp.json
+.playwright-mcp/
+# OpenAI Codex
+.codex/
+AGENTS.md
+AGENTS.override.md
+# Cursor, Windsurf, Copilot, Aider, Continue, Cline, Gemini, etc.
+.cursor/
+.cursorrules
+.cursorignore
+.windsurf/
+.windsurfrules
+.copilot/
+.github/copilot-instructions.md
+.aider*
+.continue/
+.cline/
+.clinerules
+.roo/
+.gemini/
+GEMINI.md
+.ai/
+.llm/
+
+# ---------- Secrets & credentials ----------
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+id_rsa*
+id_ed25519*
+*.keystore
+*.jks
+credentials*.json
+secrets.*
+*.secret
+.netrc
+.npmrc
+.pypirc
+.htpasswd
+
+# ---------- Personal / test images & exports ----------
+# Keep photos you test with out of git. Put them in one of these folders.
+/private/
+/samples/
+/test-images/
+/scratch/
+# Files exported by Ashframe itself
+ashframe-*.png
+ashframe-*.jpg
+ashframe-*.jpeg
+ashframe-*.webp
+
+# ---------- OS files ----------
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ---------- Editors & IDEs ----------
+.vscode/
+.idea/
+*.code-workspace
+.history/
+*.swp
+*.swo
+*~
+.project
+.settings/
+*.sublime-workspace
+
+# ---------- Local scratch / backups ----------
+*.local
+*.bak
+*.tmp
+*.temp
+*.orig
+*.rej
+tmp/
+
+# ==========================================================
+# Generic Node / web tooling (in case tooling is added later)
+# ==========================================================
+
 # Logs
 logs
 *.log
