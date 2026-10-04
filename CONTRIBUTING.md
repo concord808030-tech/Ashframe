@@ -6,7 +6,7 @@ Thanks for helping out! Ashframe is deliberately small and dependency-free, so t
 
 - **No build step, no dependencies.** Plain HTML, CSS and ES modules only. The repo must keep working when served as-is from GitHub Pages.
 - **Images never leave the device.** No network requests, no external fonts or CDNs, no analytics.
-- **Monochrome UI.** Greys only, sharp corners, minimal motion. Any new animation must be disabled under `prefers-reduced-motion`.
+- **Elegant black and white UI.** Use the tokens in `css/base.css`. Colour comes only from the small film-tone swatches, and text is in sentence case. Any new animation must be disabled under `prefers-reduced-motion`. See [the design system](docs/ARCHITECTURE.md#design-system).
 - **Preview = export.** Effects must be resolution-independent and use the seeded `rand()`. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#writing-an-effect).
 
 ## Run it locally
@@ -15,7 +15,7 @@ Thanks for helping out! Ashframe is deliberately small and dependency-free, so t
 python -m http.server 8000   # on Windows: py -m http.server 8000
 ```
 
-Then open <http://localhost:8000>. Opening `index.html` directly from disk won't work, because browsers block ES modules on `file://`.
+Then open <http://localhost:8000> (home) or <http://localhost:8000/lab/> (photo lab). Opening the HTML files directly from disk won't work, because browsers block ES modules on `file://`.
 
 ## Before opening a pull request
 

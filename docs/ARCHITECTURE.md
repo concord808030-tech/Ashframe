@@ -4,22 +4,40 @@ How Ashframe works under the hood, for anyone reading or changing the code.
 
 Ashframe is a static site: plain HTML, CSS and JavaScript ES modules. There is no build step, framework or dependency, and no server code. GitHub Pages serves the files as they are.
 
+## Pages
+
+| URL | File | What it is |
+| --- | --- | --- |
+| `/` | `index.html` + `css/home.css` + `js/home.js` | Home page: the title, a generated seascape that "develops" on load, and the list of tools. |
+| `/lab/` | `lab/index.html` + `css/lab.css` + `js/lab.js` | The photo lab editor. |
+
+Every page also loads `css/base.css`, the shared design system. Pages in subfolders reference shared files with `../`. GitHub Pages serves `/Ashframe/` as the site root, so absolute paths like `/css/...` would break. Always use relative paths.
+
+### Adding a tool
+
+1. Create `<tool>/index.html`. Load `../css/base.css` plus the tool's own CSS and JS.
+2. On the home page, turn the next "Unexposed" frame in `index.html` into a link to the tool. Give it a `--tone` swatch from the film tones in `base.css`.
+3. Reuse `js/pipeline.js`, `js/image-io.js` and the effects where they fit. They know nothing about any page.
+
 ## Modules
 
 ```
-index.html ──► js/main.js ──► js/state.js     effect definitions, defaults
-                   │
-                   ├────────► js/image-io.js  decode, scale, encode, download
-                   │
-                   └────────► js/pipeline.js  render(): runs the effects
-                                  │
-                                  ├─► js/rng.js         seeded random numbers
-                                  └─► js/effects/*.js   one file per effect
+lab/index.html ──► js/lab.js ──► js/state.js     effect definitions, defaults
+                       │
+                       ├───────► js/image-io.js  decode, scale, encode, download
+                       │
+                       └───────► js/pipeline.js  render(): runs the effects
+                                     │
+                                     ├─► js/rng.js         seeded random numbers
+                                     └─► js/effects/*.js   one file per effect
+
+index.html ──► js/home.js ──► js/pipeline.js     the same render() develops the home photo
 ```
 
 | File | Responsibility |
 | --- | --- |
-| `js/main.js` | Builds the panel, holds the loaded image, schedules preview renders, runs the export. The only module that touches the DOM. |
+| `js/lab.js` | Builds the panel, holds the loaded image, schedules preview renders, runs the export. |
+| `js/home.js` | Paints the seascape procedurally and develops it (and the photo lab thumbnail) through `render()`. Uses a fixed seed, so every visitor sees the same print. |
 | `js/state.js` | `EFFECTS` (every effect's sliders and defaults) and `createState()`. |
 | `js/pipeline.js` | `render(source, state, target)`. Draws the source and applies the enabled effects in a fixed order. |
 | `js/effects/*.js` | Pure pixel functions. They don't know about the DOM or the UI. |
@@ -86,13 +104,40 @@ To register it:
 
 ## Performance notes
 
-- With all five effects on, a preview render takes roughly 70–80ms at 1400px on a typical laptop. Lower `PREVIEW_MAX` in `main.js` to trade quality for speed.
+- With all five effects on, a preview render takes roughly 70–80ms at 1400px on a typical laptop. Lower `PREVIEW_MAX` in `lab.js` to trade quality for speed.
 - An export at 4000px takes about 1 second and runs on the main thread. If that becomes a problem, the next step is moving `render()` into a Web Worker with `OffscreenCanvas`. The effects are pure functions, so they can move unchanged.
 - `getContext('2d', { willReadFrequently: true })` keeps the canvas on the CPU, which makes repeated `getImageData` calls fast.
 - After export, the large canvases are shrunk to 0×0 so the browser frees their memory right away.
 
 ## Accessibility & motion
 
-- Every slider has a `<label>` and a live `<output>`. The status bar is an `aria-live` region.
+- Lighthouse scores 100 for accessibility on mobile and desktop. Keep it there.
+- Every slider has a `<label>`. Its formatted value (e.g. "35%") goes in `aria-valuetext`. The visible `<output>` readout is `aria-hidden`, so screen readers don't announce the value twice.
+- Effect toggles use `role="switch"`, and each effect section is a `role="group"` named by its title.
+- The status bar is the page's only `aria-live` region.
+- Text uses only `--ink` or `--muted`. Both meet the 4.5:1 contrast ratio on every background, in light and dark mode. `--faint` and the film tones are for decoration only, never for text. Switched-off effects dim the sliders, not the text.
+- The panel is `visibility: hidden` until `lab.js` has built it (`.panel.ready`). This prevents a layout shift on load.
+- On touch screens (`pointer: coarse`), text is larger and every control is at least 44px tall.
 - Everything works from the keyboard. Space/Enter on Compare, or the `\` key anywhere, shows the original.
-- `prefers-reduced-motion: reduce` turns off every CSS animation and transition: the wordmark glitch, the blinking cursor and hover fades.
+- `prefers-reduced-motion: reduce` turns off every animation, transition and page morph, in one rule at the end of `base.css`.
+
+## Design system
+
+Everything visual comes from tokens on `:root` in `css/base.css`. Dark mode (`prefers-color-scheme: dark`) only redefines those tokens.
+
+- **Neutrals:** `--paper` (white or black), `--ink`, `--backdrop` (behind photos), `--surface`, `--line`, `--muted` and `--faint`. These use true white and true black, not tinted off-whites.
+- **Film tones:** `--mist`, `--sage`, `--rose`, `--sand` and `--lilac`. This is the "slight colour". It appears only as small swatches, one per tool and one per effect (the `tone` field in `EFFECTS`), and in the export progress bar. Never use it for text or large fills.
+- **Type:** one family, Hanken Grotesk, self-hosted in `assets/fonts/`. Use sentence case everywhere, with no all-caps labels. The home wordmark is the only display type.
+- **Shape:** photos have sharp corners, while controls are soft (pill buttons, round slider thumbs).
+- **Mascot:** an original line-art character drawn with Gemini, stored in `assets/brand/`.
+  - `mascot.png` is the full illustration on the home page.
+  - `icon-*.png` is her face in a disc, used for the favicon, the lab header logo and the empty tool frame. `apple-touch-icon.png` is the iPhone home-screen icon.
+  - The light art is kept as a print, black ink on opaque white, and only the paper outside her silhouette is transparent.
+  - In dark mode the mascot has its own artwork, `mascot-dark.png`, swapped in with `<picture>` + `<source media="(prefers-color-scheme: dark)">`. It's white line art derived from the light original: thin strokes become white, and the solid hair stays black with a white outline and shine. It has the same pixel size as `mascot.png`, so nothing moves when the theme changes. A simple CSS colour inversion would turn her into a photo negative, which is why dark mode uses separate art.
+  - The icon uses the same white-disc version in both themes for now. A dark icon can be added later the same way, as `icon-dark-*.png` at the same sizes.
+  - `picture { display: contents }` in `base.css` lets the `<img>` join the surrounding grid or flex layout. `picture > source { display: none }` stops Chrome from adding a phantom row.
+- **Motion:** there are few, deliberate moments.
+  - The `.develop` reveal plays when a photo appears, like a print emerging in the developer tray. It's used for the home photo and for each photo loaded in the lab.
+  - The page morphs from home to the lab (`@view-transition`, with `view-transition-name: frame` on both photo areas). Browsers without support simply navigate normally.
+  - The export progress bar shows while an export runs.
+  - Everything else is a short response to input (hover, switch, thumb press).
