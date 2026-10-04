@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ashframe — monochrome photo lab</title>
+  <meta name="description" content="Browser-based monochrome photo lab: black & white, film grain, scanlines and glitch. Runs entirely on your device.">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <header class="bar">
+    <div class="brand">
+      <span class="wordmark" id="wordmark" data-text="ASHFRAME">ASHFRAME</span>
+      <span class="tag">v0.1 // photo lab</span>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn" id="open">Open</button>
+      <button type="button" class="btn" id="compare" disabled
+              title="Hold to see the original (or hold the \ key)">Compare</button>
+      <button type="button" class="btn btn-primary" id="export" disabled>Export</button>
+    </div>
+    <input type="file" id="file" class="visually-hidden" tabindex="-1"
+           accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp">
+  </header>
+
+  <main class="lab">
+    <section class="stage" id="stage" aria-label="Preview">
+      <button type="button" class="drop" id="drop">
+        <span class="drop-title">Drop image</span>
+        <span class="drop-sub">or click to open · JPG · PNG · WEBP</span>
+      </button>
+      <canvas id="view" hidden aria-label="Processed preview"></canvas>
+      <p class="readout" id="readout" hidden></p>
+      <div class="drag-hint" aria-hidden="true">Release to load</div>
+    </section>
+
+    <aside class="panel" aria-label="Controls">
+      <div id="effects"></div>
+
+      <section class="fx" aria-labelledby="out-title">
+        <div class="fx-head">
+          <h2 class="fx-title" id="out-title">Output</h2>
+        </div>
+        <div class="ctl">
+          <label for="format">Format</label>
+          <select id="format">
+            <option value="image/png">PNG</option>
+            <option value="image/jpeg">JPEG</option>
+            <option value="image/webp">WEBP</option>
+          </select>
+        </div>
+        <div class="ctl" id="quality-row" hidden>
+          <div class="ctl-row">
+            <label for="quality">Quality</label>
+            <output for="quality" id="quality-out">92</output>
+          </div>
+          <input type="range" id="quality" min="50" max="100" step="1" value="92">
+        </div>
+        <p class="note" id="export-size">Max 4000 px on the long side.</p>
+      </section>
+
+      <div class="panel-foot">
+        <button type="button" class="btn" id="reseed" title="New random layout for grain and glitch">Reseed</button>
+        <button type="button" class="btn" id="reset-all">Reset all</button>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="status">
+    <span class="status-line"><span id="status" role="status" aria-live="polite">READY</span><span class="cursor" aria-hidden="true">_</span></span>
+    <span class="privacy">Local only. Images never leave your device.</span>
+  </footer>
+</body>
+</html>
