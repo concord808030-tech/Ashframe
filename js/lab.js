@@ -14,6 +14,7 @@
 import { EFFECTS, createState, defaultEffect } from './state.js';
 import { render } from './pipeline.js';
 import { randomSeed } from './rng.js';
+import { initThemeToggle } from './theme.js';
 import {
   isAccepted, decode, sizeOf, fit, scaledCanvas, canvasToBlob, download,
 } from './image-io.js';
@@ -414,3 +415,4 @@ function bindEvents() {
 
 buildControls();
 bindEvents();
+initThemeToggle(document.getElementById('theme-toggle'));

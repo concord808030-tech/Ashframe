@@ -8,7 +8,7 @@ Ashframe is a static site: plain HTML, CSS and JavaScript ES modules. There is n
 
 | URL | File | What it is |
 | --- | --- | --- |
-| `/` | `index.html` + `css/home.css` + `js/home.js` | Home page: the title, a generated seascape that "develops" on load, and the list of tools. |
+| `/` | `index.html` + `css/home.css` + `js/home.js` | Home page: the title, a slideshow of five prints painted in code, rain in the background, and the list of tools. |
 | `/lab/` | `lab/index.html` + `css/lab.css` + `js/lab.js` | The photo lab editor. |
 
 Every page also loads `css/base.css`, the shared design system. Pages in subfolders reference shared files with `../`. GitHub Pages serves `/Ashframe/` as the site root, so absolute paths like `/css/...` would break. Always use relative paths.
@@ -31,13 +31,21 @@ lab/index.html ──► js/lab.js ──► js/state.js     effect definitions,
                                      ├─► js/rng.js         seeded random numbers
                                      └─► js/effects/*.js   one file per effect
 
-index.html ──► js/home.js ──► js/pipeline.js     the same render() develops the home photo
+index.html ──► js/home.js ──► js/scenes.js       five procedural scenes
+                   │
+                   ├───────► js/pipeline.js     the same render() develops each print
+                   └───────► js/rain.js         background rain
+
+every page ──► js/theme.js                       light/dark toggle
 ```
 
 | File | Responsibility |
 | --- | --- |
 | `js/lab.js` | Builds the panel, holds the loaded image, schedules preview renders, runs the export. |
-| `js/home.js` | Paints the seascape procedurally and develops it (and the photo lab thumbnail) through `render()`. Uses a fixed seed, so every visitor sees the same print. |
+| `js/home.js` | Runs the slideshow. It develops each scene through `render()`, prepares the next one in idle time and caches it, and drives the pause button for both the slideshow and the rain. It also paints the photo lab thumbnail. |
+| `js/scenes.js` | Five painters (arctic fjord, seascape, mountain fog, pine forest, harbour at night). Each returns an unprocessed canvas, uses a fixed seed and scales to any size. |
+| `js/rain.js` | Rain on a fixed canvas behind the page (`z-index: -1`), in the current `--ink` colour. It stops when paused or when the tab is hidden. |
+| `js/theme.js` | The light/dark toggle: saves the choice, sets `data-theme` on `<html>`, keeps `theme-color` in sync and fires a `themechange` event. |
 | `js/state.js` | `EFFECTS` (every effect's sliders and defaults) and `createState()`. |
 | `js/pipeline.js` | `render(source, state, target)`. Draws the source and applies the enabled effects in a fixed order. |
 | `js/effects/*.js` | Pure pixel functions. They don't know about the DOM or the UI. |
@@ -123,7 +131,9 @@ To register it:
 
 ## Design system
 
-Everything visual comes from tokens on `:root` in `css/base.css`. Dark mode (`prefers-color-scheme: dark`) only redefines those tokens.
+Everything visual comes from tokens on `:root` in `css/base.css`. Dark mode only redefines those tokens.
+
+- **Theme:** the device setting decides until the user presses the toggle. After that, `data-theme="light|dark"` on `<html>` wins, and the choice is saved in `localStorage` under `ashframe-theme`. Every page has a one-line inline script in `<head>` that applies the saved choice before first paint. The dark tokens are written twice in `base.css`, once for `[data-theme="dark"]` and once for the system setting when no choice is saved. Keep the two blocks identical.
 
 - **Neutrals:** `--paper` (white or black), `--ink`, `--backdrop` (behind photos), `--surface`, `--line`, `--muted` and `--faint`. These use true white and true black, not tinted off-whites.
 - **Film tones:** `--mist`, `--sage`, `--rose`, `--sand` and `--lilac`. This is the "slight colour". It appears only as small swatches, one per tool and one per effect (the `tone` field in `EFFECTS`), and in the export progress bar. Never use it for text or large fills.
@@ -133,11 +143,12 @@ Everything visual comes from tokens on `:root` in `css/base.css`. Dark mode (`pr
   - `mascot.png` is the full illustration on the home page.
   - `icon-*.png` is her face in a disc, used for the favicon, the lab header logo and the empty tool frame. `apple-touch-icon.png` is the iPhone home-screen icon.
   - The light art is kept as a print, black ink on opaque white, and only the paper outside her silhouette is transparent.
-  - In dark mode the mascot has its own artwork, `mascot-dark.png`, swapped in with `<picture>` + `<source media="(prefers-color-scheme: dark)">`. It's white line art derived from the light original: thin strokes become white, and the solid hair stays black with a white outline and shine. It has the same pixel size as `mascot.png`, so nothing moves when the theme changes. A simple CSS colour inversion would turn her into a photo negative, which is why dark mode uses separate art.
+  - In dark mode the mascot has its own artwork, `mascot-dark.png`. Both images are in the page; the `.for-light` and `.for-dark` classes in `base.css` show the one that matches the theme, toggle included. (`<picture>` can't follow the toggle, since its media query only sees the device setting.) It's white line art derived from the light original: thin strokes become white, and the solid hair stays black with a white outline and shine. It has the same pixel size as `mascot.png`, so nothing moves when the theme changes. A simple CSS colour inversion would turn her into a photo negative, which is why dark mode uses separate art.
   - The icon uses the same white-disc version in both themes for now. A dark icon can be added later the same way, as `icon-dark-*.png` at the same sizes.
-  - `picture { display: contents }` in `base.css` lets the `<img>` join the surrounding grid or flex layout. `picture > source { display: none }` stops Chrome from adding a phantom row.
 - **Motion:** there are few, deliberate moments.
-  - The `.develop` reveal plays when a photo appears, like a print emerging in the developer tray. It's used for the home photo and for each photo loaded in the lab.
+  - The `.develop` reveal plays when a photo appears, like a print emerging in the developer tray. It's used for each print in the home slideshow (every 8 seconds, each one over the last) and for each photo loaded in the lab.
+  - Rain falls behind the home page.
+  - The slideshow and rain move on their own for more than 5 seconds, so one button pauses both (WCAG 2.2.2). With reduced motion on, they start paused.
   - The page morphs from home to the lab (`@view-transition`, with `view-transition-name: frame` on both photo areas). Browsers without support simply navigate normally.
   - The export progress bar shows while an export runs.
   - Everything else is a short response to input (hover, switch, thumb press).

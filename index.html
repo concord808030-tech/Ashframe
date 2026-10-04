@@ -14,29 +14,46 @@
   <link rel="icon" href="assets/brand/icon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="assets/brand/icon-192.png" sizes="192x192" type="image/png">
   <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  <!-- Apply a saved light/dark choice before first paint (see js/theme.js) -->
+  <script>try{var t=localStorage.getItem('ashframe-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
   <link rel="preload" href="assets/fonts/hanken-grotesk-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/home.css">
   <script type="module" src="js/home.js"></script>
 </head>
 <body>
+  <!-- Rain falling behind the page content (js/rain.js) -->
+  <canvas class="rain" id="rain" aria-hidden="true"></canvas>
+
   <main class="home">
+    <div class="home-bar">
+      <button type="button" class="icon-btn theme-toggle" id="theme-toggle" aria-label="Switch theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 3.75a8.25 8.25 0 0 1 0 16.5z" fill="currentColor"/></svg>
+      </button>
+    </div>
+
     <header class="intro">
       <h1 class="display">ashframe</h1>
-      <!-- Ashframe's mascot: decorative, so hidden from screen readers -->
-      <picture class="mascot-pic">
-        <source srcset="assets/brand/mascot-dark.png" media="(prefers-color-scheme: dark)">
-        <img class="mascot" src="assets/brand/mascot.png" width="616" height="859" alt="" aria-hidden="true">
-      </picture>
+      <!-- Ashframe's mascot, drawn separately for each theme. Decorative. -->
+      <img class="mascot for-light" src="assets/brand/mascot.png" width="616" height="859" alt="">
+      <img class="mascot for-dark" src="assets/brand/mascot-dark.png" width="616" height="859" alt="">
       <p class="lede">A darkroom in your browser. Turn photos black and white, add grain and texture, and export them at full size. Nothing is uploaded.</p>
       <a class="btn btn-primary cta" href="lab/">Open the photo lab</a>
     </header>
 
     <figure class="print">
+      <!-- Two stacked canvases: each new print develops on top of the last -->
       <div class="print-frame">
-        <canvas id="print" aria-hidden="true"></canvas>
+        <canvas aria-hidden="true"></canvas>
+        <canvas aria-hidden="true"></canvas>
       </div>
-      <figcaption>Arctic fjord, generated and developed in your browser by Ashframe.</figcaption>
+      <div class="print-meta">
+        <figcaption id="print-caption">Arctic fjord. Generated and developed in your browser by Ashframe.</figcaption>
+        <div class="print-controls">
+          <div class="print-dots" id="print-dots" role="group" aria-label="Prints"></div>
+          <button type="button" class="icon-btn" id="motion-toggle" aria-label="Pause the slideshow and rain"></button>
+        </div>
+      </div>
     </figure>
 
     <section class="tools" aria-labelledby="tools-title">

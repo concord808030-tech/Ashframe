@@ -19,7 +19,7 @@ The home page lists the available tools. More will be added over time.
 - **Consistent results:** effect sizes scale with the image, and grain and glitch use a seeded random generator. The export keeps the same look and layout as the preview.
 - **Compare:** hold the Compare button (or the `\` key) to see the original.
 - **Reseed:** pick a new random layout for grain and glitch.
-- **Elegant black and white UI:** light by default, dark when your device is in dark mode. It comes with a few quiet animations: the home photo develops like a print, and the page morphs into the photo lab.
+- **Elegant black and white UI:** follows your device's light or dark mode, with a toggle to choose yourself. The home page cycles through five prints painted in code, each developing like a darkroom print, with soft rain in the background. You can pause both with one button.
 - **Accessible:** Lighthouse scores 100. It's keyboard-friendly, works with screen readers, has touch-sized controls on phones, and respects `prefers-reduced-motion`.
 - **No build step:** plain HTML, CSS and JavaScript (ES modules).
 
@@ -67,7 +67,10 @@ lab/index.html        the photo lab
 css/base.css          shared design system: tokens, type, buttons, dark mode
 css/home.css          home page styles
 css/lab.css           photo lab styles
-js/home.js            paints and "develops" the home page photo
+js/home.js            home page slideshow, rain and pause control
+js/scenes.js          the five procedural prints
+js/rain.js            background rain
+js/theme.js           light/dark toggle (both pages)
 js/lab.js             photo lab UI wiring, preview loop, export
 js/state.js           effect definitions and defaults
 js/pipeline.js        shared render pipeline (preview + export)
