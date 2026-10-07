@@ -37,6 +37,7 @@ index.html ──► js/home.js ──► js/scenes.js       five procedural sce
                    └───────► js/rain.js         background rain
 
 every page ──► js/theme.js                       light/dark toggle
+           └──► js/fresh.js ──► sw.js           revalidate assets after a deploy
 ```
 
 | File | Responsibility |
@@ -46,6 +47,7 @@ every page ──► js/theme.js                       light/dark toggle
 | `js/scenes.js` | Five painters (arctic fjord, seascape, mountain fog, pine forest, harbour at night). Each returns an unprocessed canvas, uses a fixed seed and scales to any size. |
 | `js/rain.js` | Rain on a fixed canvas behind the page (`z-index: -1`), in the current `--ink` colour. It stops when paused or when the tab is hidden. |
 | `js/theme.js` | The light/dark toggle: saves the choice, sets `data-theme` on `<html>`, keeps `theme-color` in sync and fires a `themechange` event. |
+| `js/fresh.js`, `sw.js` | Registers a root service worker that refetches same-origin CSS, modules and images with `cache: 'no-cache'` (a cheap 304 when unchanged). GitHub Pages sends `max-age=600` and a normal reload only revalidates the HTML, so without it a deploy could show new HTML with stale CSS and JS for up to 10 minutes. It caches nothing. |
 | `js/state.js` | `EFFECTS` (every effect's sliders and defaults) and `createState()`. |
 | `js/pipeline.js` | `render(source, state, target)`. Draws the source and applies the enabled effects in a fixed order. |
 | `js/effects/*.js` | Pure pixel functions. They don't know about the DOM or the UI. |
@@ -59,7 +61,7 @@ every page ──► js/theme.js                       light/dark toggle
 3. **Compare.** While Compare is held, the untouched `preview` is drawn instead.
 4. **Export.** `exportImage()` scales `original` to at most **4000px** and runs the same `render()` with the same `state`. It then encodes the result (PNG, JPEG or WebP) and downloads it.
 
-The image never leaves the browser. There are no `fetch` calls, no external fonts and no analytics.
+The image never leaves the browser. There are no external requests, fonts or analytics. The only `fetch` is in `sw.js`, which re-requests the site's own files.
 
 ## Why the export matches the preview
 

@@ -16,6 +16,7 @@ import { createState } from './state.js';
 import { paintArctic, paintSeascape, paintMountainFog, paintPineForest, paintHarbourNight } from './scenes.js';
 import { createRain } from './rain.js';
 import { initThemeToggle } from './theme.js';
+import './fresh.js';
 
 const SEED = 1957;
 const INTERVAL = 8000; // ms each print stays up
