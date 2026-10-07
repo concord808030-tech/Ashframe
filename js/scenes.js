@@ -385,17 +385,20 @@ export function paintSeascape(w, h) {
   ctx.fillStyle = verticalGradient(ctx, horizon, h, [[0, '#9aa2a7'], [0.35, '#5b656b'], [1, '#1b2124']]);
   ctx.fillRect(0, horizon, w, h - horizon);
 
-  // Smoothed-out water: soft horizontal streaks, bolder up close
-  ctx.save();
-  if ('filter' in ctx) ctx.filter = `blur(${Math.max(1, w / 1600)}px)`;
+  // Smoothed-out water: soft horizontal streaks, bolder up close. Drawn
+  // sharp on their own layer, then blurred once (a filter per streak is slow).
+  const [streaks, sctx] = makeCanvas(w, h);
   for (let i = 0; i < 900; i++) {
     const t = Math.pow(rand(), 1.8);
     const y = horizon + 2 + t * (h - horizon);
     const len = w * (0.04 + rand() * 0.5);
-    ctx.globalAlpha = 0.025 + rand() * 0.06;
-    ctx.fillStyle = rand() > 0.45 ? '#ffffff' : '#000000';
-    ctx.fillRect(rand() * w - len * 0.25, y, len, Math.max(1, (0.5 + t * 3) * (h / 900)));
+    sctx.globalAlpha = 0.025 + rand() * 0.06;
+    sctx.fillStyle = rand() > 0.45 ? '#ffffff' : '#000000';
+    sctx.fillRect(rand() * w - len * 0.25, y, len, Math.max(1, (0.5 + t * 3) * (h / 900)));
   }
+  ctx.save();
+  if ('filter' in ctx) ctx.filter = `blur(${Math.max(1, w / 1600)}px)`;
+  ctx.drawImage(streaks, 0, 0);
   ctx.restore();
 
   fogBand(ctx, w, horizon - h * 0.01, h * 0.07, h * 0.05, '240,238,234', 0.6);
