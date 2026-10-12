@@ -1,7 +1,7 @@
 /**
  * @file Home page: the slideshow of prints, and the rain.
  *
- * The hero shows five prints painted in code (js/scenes.js). Each one is
+ * The hero shows eight prints painted in code (js/scenes.js). Each one is
  * developed through the photo lab's own render pipeline, then "develops" on
  * screen over the previous one every few seconds. Prints are prepared ahead
  * of time in idle moments and cached, so a change of print is just a copy.
@@ -13,7 +13,10 @@
 
 import { render } from './pipeline.js';
 import { createState } from './state.js';
-import { paintArctic, paintSeascape, paintMountainFog, paintPineForest, paintHarbourNight } from './scenes.js';
+import {
+  paintLibrary, paintStudyWindow, paintCloister, paintSpires,
+  paintCandleDesk, paintGraveyard, paintObservatory, paintGallery,
+} from './scenes.js';
 import { createRain } from './rain.js';
 import './fresh.js';
 
@@ -22,16 +25,22 @@ const INTERVAL = 8000; // ms each print stays up
 
 /** The prints, in order. `print` overrides the lab's default effect settings. */
 const SCENES = [
-  { name: 'Arctic fjord', tone: 'slate', paint: paintArctic,
+  { name: 'Library at midnight', tone: 'slate', paint: paintLibrary,
     print: { tone: { contrast: 18 }, mono: { amount: 72 }, grain: { amount: 22, size: 2 } } },
-  { name: 'Seascape', tone: 'sepia', paint: paintSeascape,
-    print: { tone: { contrast: 14 }, mono: { amount: 68 }, grain: { amount: 24, size: 2 } } },
-  { name: 'Mountain fog', tone: 'moss', paint: paintMountainFog,
-    print: { tone: { contrast: 16 }, mono: { amount: 74 }, grain: { amount: 20, size: 2 } } },
-  { name: 'Pine forest', tone: 'brass', paint: paintPineForest,
-    print: { tone: { contrast: 20 }, mono: { amount: 78 }, grain: { amount: 22, size: 2 } } },
-  { name: 'Harbour at night', tone: 'oxblood', paint: paintHarbourNight,
-    print: { tone: { contrast: 22 }, mono: { amount: 70 }, grain: { amount: 28, size: 2.5 } } },
+  { name: 'Rain on the study window', tone: 'sepia', paint: paintStudyWindow,
+    print: { tone: { contrast: 16 }, mono: { amount: 70 }, grain: { amount: 24, size: 2 } } },
+  { name: 'The cloister', tone: 'moss', paint: paintCloister,
+    print: { tone: { contrast: 20 }, mono: { amount: 74 }, grain: { amount: 22, size: 2 } } },
+  { name: 'Spires at dusk', tone: 'brass', paint: paintSpires,
+    print: { tone: { contrast: 16 }, mono: { amount: 68 }, grain: { amount: 24, size: 2 } } },
+  { name: 'Candlelit desk', tone: 'oxblood', paint: paintCandleDesk,
+    print: { tone: { contrast: 14 }, mono: { amount: 70 }, grain: { amount: 26, size: 2 } } },
+  { name: 'Misty graveyard avenue', tone: 'slate', paint: paintGraveyard,
+    print: { tone: { contrast: 22 }, mono: { amount: 78 }, grain: { amount: 20, size: 2 } } },
+  { name: 'The old observatory', tone: 'sepia', paint: paintObservatory,
+    print: { tone: { contrast: 18 }, mono: { amount: 76 }, grain: { amount: 28, size: 2.5 } } },
+  { name: 'Portrait gallery', tone: 'moss', paint: paintGallery,
+    print: { tone: { contrast: 16 }, mono: { amount: 72 }, grain: { amount: 24, size: 2 } } },
 ];
 
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -80,15 +89,15 @@ function developed(i) {
   return cache[i];
 }
 
-/** The photo lab card's thumbnail: the fjord again, visibly "edited". */
+/** The photo lab card's thumbnail: the library's lamp and desk, visibly "edited". */
 function paintThumb(source) {
   const canvas = document.getElementById('thumb');
   const crop = document.createElement('canvas');
   crop.width = 800;
   crop.height = 600;
-  const sh = source.height * 0.62;
+  const sh = source.height * 0.5;
   const sw = sh * (4 / 3);
-  crop.getContext('2d').drawImage(source, source.width * 0.42, source.height * 0.22, sw, sh, 0, 0, 800, 600);
+  crop.getContext('2d').drawImage(source, source.width * 0.5 - sw / 2, source.height * 0.25, sw, sh, 0, 0, 800, 600);
   render(crop, printState({
     tone: { contrast: 30 },
     mono: { amount: 70 },
