@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="1200" height="400" role="img" aria-label="Ashframe: a darkroom in your browser. A black cat on three old books beside a folding camera, in the rain.">
+  <title>Ashframe: a darkroom in your browser</title>
+  <style>
+    .word { font-family: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif; fill: #ede4d0; }
+    .sans { font-family: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif; fill: #a99a82; }
+    .rain line { stroke: #ede4d0; stroke-width: 1; animation: fall 1.5s linear infinite; }
+    .art { fill: none; stroke: #ede4d0; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+    .desk { stroke: #5b4d40; }
+    .cover { fill: #201a15; }
+    .solid { fill: #0b0908; }
+    .body { stroke-width: 1.5; }
+    .hair { stroke-width: 0.8; opacity: 0.55; }
+    .band { stroke: #b8935a; stroke-width: 1.6; }
+    .label { stroke: #b8935a; stroke-width: 0.8; }
+    .nose { fill: #a99a82; stroke: none; }
+    .eye { fill: #b8935a; stroke: none; }
+    .pupil { stroke: #0b0908; stroke-width: 2.2; }
+    .glass { fill: #0b0908; stroke-width: 0.8; }
+    .glint { fill: #ede4d0; stroke: none; opacity: 0.7; }
+    .bulb { fill: #ede4d0; stroke: none; }
+    .stem { stroke-width: 2; }
+    .eyes { transform-box: fill-box; transform-origin: center; animation: blink 7s infinite; }
+    .tail { transform-box: fill-box; transform-origin: 95% 95%; animation: swish 5s ease-in-out infinite alternate; }
+    .flash { opacity: 0; fill: #b8935a; fill-opacity: 0.25; stroke: #b8935a; stroke-width: 1.4; transform-box: fill-box; transform-origin: center; animation: flash 6s ease-out 1.2s infinite; }
+    @keyframes fall { from { transform: translate(0, 0); } to { transform: translate(-130px, 480px); } }
+    @keyframes blink { 0%, 97%, 100% { transform: scaleY(1); } 98.5% { transform: scaleY(0.1); } }
+    @keyframes swish { from { transform: rotate(-8deg); } to { transform: rotate(8deg); } }
+    @keyframes flash { 0% { opacity: 0; transform: scale(0.4); } 2.5% { opacity: 1; transform: scale(1); } 15%, 100% { opacity: 0; transform: scale(1.35); } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none; } }
+  </style>
+  <defs>
+    <radialGradient id="glow" cx="0.62" cy="0.55" r="0.75">
+      <stop offset="0" stop-color="#2a2119" stop-opacity="0.9"/>
+      <stop offset="0.6" stop-color="#15110e" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vignette" cx="0.5" cy="0.5" r="0.75">
+      <stop offset="0.55" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.55"/>
+    </radialGradient>
+    <clipPath id="frame"><rect width="1200" height="400"/></clipPath>
+  </defs>
+  <rect width="1200" height="400" fill="#15110e"/>
+  <rect width="1200" height="400" fill="url(#glow)"/>
+  <g class="rain" clip-path="url(#frame)">
+    <line x1="703" y1="-61" x2="695" y2="-31" style="animation-duration:1.62s;animation-delay:-0.12s;opacity:0.18"/>
+    <line x1="788" y1="-6" x2="783" y2="13" style="animation-duration:1.83s;animation-delay:-0.39s;opacity:0.11"/>
+    <line x1="896" y1="-72" x2="889" y2="-47" style="animation-duration:1.17s;animation-delay:-0.5s;opacity:0.22"/>
+    <line x1="293" y1="-52" x2="288" y2="-33" style="animation-duration:1.56s;animation-delay:-0.62s;opacity:0.24"/>
+    <line x1="135" y1="-9" x2="129" y2="13" style="animation-duration:1.33s;animation-delay:-0.19s;opacity:0.12"/>
+    <line x1="671" y1="-9" x2="665" y2="14" style="animation-duration:1.18s;animation-delay:-0.67s;opacity:0.13"/>
+    <line x1="239" y1="-10" x2="234" y2="10" style="animation-duration:1.55s;animation-delay:-0.96s;opacity:0.17"/>
+    <line x1="1128" y1="-26" x2="1120" y2="2" style="animation-duration:1.47s;animation-delay:-1.36s;opacity:0.15"/>
+    <line x1="548" y1="-57" x2="541" y2="-32" style="animation-duration:1.17s;animation-delay:-0.35s;opacity:0.17"/>
+    <line x1="743" y1="-23" x2="736" y2="4" style="animation-duration:1.59s;animation-delay:-0.12s;opacity:0.17"/>
+    <line x1="377" y1="-37" x2="371" y2="-15" style="animation-duration:1.85s;animation-delay:-0.78s;opacity:0.23"/>
+    <line x1="198" y1="-9" x2="190" y2="19" style="animation-duration:1.37s;animation-delay:-0.48s;opacity:0.17"/>
+    <line x1="974" y1="-72" x2="969" y2="-52" style="animation-duration:1.86s;animation-delay:-0.88s;opacity:0.19"/>
+    <line x1="164" y1="-41" x2="155" y2="-9" style="animation-duration:1.33s;animation-delay:-0.51s;opacity:0.19"/>
+    <line x1="86" y1="-21" x2="78" y2="8" style="animation-duration:1.23s;animation-delay:-0.14s;opacity:0.11"/>
+    <line x1="628" y1="-64" x2="621" y2="-39" style="animation-duration:1.42s;animation-delay:-1.3s;opacity:0.17"/>
+    <line x1="380" y1="-23" x2="372" y2="7" style="animation-duration:1.54s;animation-delay:-1.36s;opacity:0.21"/>
+    <line x1="1166" y1="-45" x2="1158" y2="-14" style="animation-duration:1.89s;animation-delay:-1.29s;opacity:0.15"/>
+    <line x1="512" y1="-61" x2="507" y2="-41" style="animation-duration:1.24s;animation-delay:-0.29s;opacity:0.13"/>
+    <line x1="1033" y1="-5" x2="1027" y2="18" style="animation-duration:1.31s;animation-delay:-0.01s;opacity:0.16"/>
+    <line x1="796" y1="-2" x2="788" y2="26" style="animation-duration:1.86s;animation-delay:-1.28s;opacity:0.17"/>
+    <line x1="150" y1="-22" x2="142" y2="8" style="animation-duration:1.42s;animation-delay:-0.56s;opacity:0.17"/>
+    <line x1="860" y1="-73" x2="854" y2="-49" style="animation-duration:1.15s;animation-delay:-0.24s;opacity:0.12"/>
+    <line x1="736" y1="-4" x2="731" y2="15" style="animation-duration:1.18s;animation-delay:-0.67s;opacity:0.18"/>
+    <line x1="784" y1="-2" x2="779" y2="16" style="animation-duration:1.16s;animation-delay:-0.24s;opacity:0.15"/>
+    <line x1="556" y1="-36" x2="548" y2="-7" style="animation-duration:1.48s;animation-delay:-0.17s;opacity:0.17"/>
+    <line x1="994" y1="-19" x2="985" y2="14" style="animation-duration:1.35s;animation-delay:-0.19s;opacity:0.2"/>
+    <line x1="582" y1="-19" x2="576" y2="4" style="animation-duration:1.51s;animation-delay:-0.31s;opacity:0.23"/>
+    <line x1="780" y1="-62" x2="775" y2="-44" style="animation-duration:1.71s;animation-delay:-0.51s;opacity:0.19"/>
+    <line x1="226" y1="-47" x2="217" y2="-13" style="animation-duration:1.39s;animation-delay:-0.23s;opacity:0.21"/>
+    <line x1="1130" y1="-11" x2="1121" y2="23" style="animation-duration:1.36s;animation-delay:-0.3s;opacity:0.21"/>
+    <line x1="439" y1="-50" x2="431" y2="-20" style="animation-duration:1.69s;animation-delay:-0.38s;opacity:0.17"/>
+    <line x1="768" y1="-77" x2="763" y2="-59" style="animation-duration:1.73s;animation-delay:-0.82s;opacity:0.13"/>
+    <line x1="745" y1="-23" x2="737" y2="6" style="animation-duration:1.86s;animation-delay:-0.68s;opacity:0.13"/>
+    <line x1="504" y1="-20" x2="498" y2="4" style="animation-duration:1.37s;animation-delay:-0.66s;opacity:0.24"/>
+    <line x1="43" y1="-19" x2="35" y2="10" style="animation-duration:1.74s;animation-delay:-0.15s;opacity:0.19"/>
+    <line x1="835" y1="-55" x2="826" y2="-22" style="animation-duration:1.81s;animation-delay:-0.79s;opacity:0.19"/>
+    <line x1="217" y1="-30" x2="208" y2="2" style="animation-duration:1.42s;animation-delay:-1.34s;opacity:0.2"/>
+    <line x1="388" y1="-64" x2="383" y2="-46" style="animation-duration:1.22s;animation-delay:-1.1s;opacity:0.21"/>
+    <line x1="339" y1="-2" x2="330" y2="31" style="animation-duration:1.63s;animation-delay:-0.57s;opacity:0.18"/>
+  </g>
+  <text class="word" x="84" y="208" font-size="120" font-weight="300" letter-spacing="1">ashframe</text>
+  <path d="M90 240H520" stroke="#b8935a" stroke-width="1"/>
+  <text class="word" x="88" y="290" font-size="36" font-style="italic">A darkroom in your browser.</text>
+  <text class="sans" x="90" y="330" font-size="17" letter-spacing="0.4">Private photo tools. Nothing leaves your device.</text>
+  <g class="art" transform="translate(806 26) scale(0.88)">
+    <g transform="translate(0 20)">
+      <path class="desk" d="M4 378H356"/>
+      <rect class="cover" x="30" y="340" width="196" height="38" rx="3"/>
+      <rect class="cover" x="46" y="308" width="166" height="32" rx="3"/>
+      <rect class="cover" x="36" y="278" width="186" height="30" rx="3"/>
+      <path class="band" d="M44 340v38M50 340v38M206 340v38M212 340v38M60 308v32M198 308v32M50 278v30M56 278v30M202 278v30M208 278v30"/>
+      <rect class="label" x="104" y="350" width="52" height="18"/>
+      <path class="hair" d="M112 359h36M98 324h62M90 293h80"/>
+      <path class="tail solid" d="M86 274C56 277 38 262 38 238C38 218 50 206 46 190C44 181 52 177 57 184C64 196 54 214 54 236C54 254 66 264 88 263Z"/>
+      <path class="solid body" d="M78 278C68 250 74 208 96 184C100 177 100 169 99 163C89 153 88 128 94 112L100 76L120 96Q131 92 142 96L162 78L166 112C172 128 171 152 161 163C160 170 161 177 166 184C188 208 194 250 182 278Z"/>
+      <path class="hair" d="M101 84L104 104M159 86L156 104M120 278C116 250 118 226 122 208M140 278C144 250 142 226 138 208M92 276C86 254 92 232 106 222M114 278Q121 273 128 278M132 278Q139 273 146 278M112 144L88 140M112 148L90 152M148 144L172 140M148 148L170 152"/>
+      <path class="nose" d="M126 138h8l-4 5z"/>
+      <g class="eyes">
+        <path class="eye" d="M107 124Q116 116 125 124Q116 132 107 124ZM135 124Q144 116 153 124Q144 132 135 124Z"/>
+        <path class="pupil" d="M116 119.5v9M144 119.5v9"/>
+      </g>
+      <g class="flash">
+        <circle cx="246" cy="248" r="26"/>
+        <path d="M246 214v-14M212 248h-12M280 248h12M222 224l-9-9M270 224l9-9"/>
+      </g>
+      <path class="stem" d="M246 300V262"/>
+      <circle class="cover" cx="246" cy="248" r="14"/>
+      <circle class="hair" cx="246" cy="248" r="9"/>
+      <circle class="bulb" cx="246" cy="248" r="4.5"/>
+      <rect class="cover" x="236" y="300" width="38" height="78" rx="3"/>
+      <path class="hair" d="M236 314h38M236 364h38"/>
+      <rect class="cover" x="250" y="294" width="10" height="6" rx="1"/>
+      <rect class="cover" x="272" y="370" width="68" height="8" rx="1"/>
+      <path class="solid" d="M274 306L318 318V362L274 370Z"/>
+      <path class="hair" d="M283 308.5V368.4M292 310.9V366.7M301 313.4V365.1M310 315.8V363.5"/>
+      <rect class="cover" x="316" y="312" width="10" height="58" rx="1.5"/>
+      <circle class="cover" cx="326" cy="338" r="17"/>
+      <circle cx="326" cy="338" r="11"/>
+      <circle class="glass" cx="326" cy="338" r="6"/>
+      <circle class="glint" cx="323.5" cy="335.5" r="1.6"/>
+    </g>
+  </g>
+  <rect width="1200" height="400" fill="url(#vignette)"/>
+  <rect x="0.5" y="0.5" width="1199" height="399" fill="none" stroke="#b8935a" stroke-opacity="0.7"/>
+</svg>
