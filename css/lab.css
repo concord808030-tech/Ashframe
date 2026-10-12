@@ -41,9 +41,10 @@ body {
 }
 
 .page-title {
-  font-size: var(--t-lg);
-  font-weight: 400;
-  letter-spacing: -0.02em;
+  font-family: var(--serif);
+  font-size: calc(var(--t-lg) * 1.2);
+  font-weight: 500;
+  letter-spacing: 0;
   white-space: nowrap;
 }
 
@@ -108,9 +109,10 @@ body {
 }
 
 .drop-title {
-  font-size: var(--t-xl);
-  font-weight: 400;
-  letter-spacing: -0.02em;
+  font-family: var(--serif);
+  font-size: calc(var(--t-xl) * 1.2);
+  font-weight: 500;
+  letter-spacing: 0;
 }
 
 .drop-sub {
@@ -207,9 +209,10 @@ body {
 
 .fx-title {
   margin: 0;
-  font-size: var(--t-md);
-  font-weight: 500;
-  letter-spacing: -0.01em;
+  font-family: var(--serif);
+  font-size: calc(var(--t-md) * 1.2);
+  font-weight: 600;
+  letter-spacing: 0;
 }
 
 /* Switch + swatch + title; the whole row toggles the effect */
@@ -425,7 +428,7 @@ input[type="range"]:active::-moz-range-thumb {
   }
 
   .fx-title {
-    font-size: var(--t-lg);
+    font-size: calc(var(--t-lg) * 1.2);
   }
 
   /* The whole label row is the tap target, not just the switch */

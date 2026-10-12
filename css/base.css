@@ -175,9 +175,11 @@ body::after {
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
+  font-family: var(--serif);
   font-weight: 500;
-  font-size: var(--t-lg);
-  letter-spacing: -0.03em;
+  font-size: calc(var(--t-lg) * 1.2);
+  line-height: 1;
+  letter-spacing: 0;
   text-decoration: none;
 }
 
