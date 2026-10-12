@@ -124,7 +124,7 @@ body {
 }
 
 .drop:hover .drop-frame {
-  background-color: var(--mist);
+  background-color: var(--brass);
   transform: translateY(-2px);
 }
 
@@ -165,7 +165,7 @@ body {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--mist), var(--sage), var(--rose), var(--sand), var(--mist));
+  background: linear-gradient(90deg, var(--slate), var(--moss), var(--oxblood), var(--brass), var(--slate));
   background-size: 200% 100%;
   animation: drift 1.2s linear infinite;
 }
@@ -241,8 +241,8 @@ body {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+  background: var(--muted);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.4);
   transition: transform var(--fast) var(--ease);
 }
 

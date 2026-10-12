@@ -1,5 +1,5 @@
 /**
- * @file Home page: the slideshow of prints, the rain and the theme toggle.
+ * @file Home page: the slideshow of prints, and the rain.
  *
  * The hero shows five prints painted in code (js/scenes.js). Each one is
  * developed through the photo lab's own render pipeline, then "develops" on
@@ -15,7 +15,6 @@ import { render } from './pipeline.js';
 import { createState } from './state.js';
 import { paintArctic, paintSeascape, paintMountainFog, paintPineForest, paintHarbourNight } from './scenes.js';
 import { createRain } from './rain.js';
-import { initThemeToggle } from './theme.js';
 import './fresh.js';
 
 const SEED = 1957;
@@ -23,15 +22,15 @@ const INTERVAL = 8000; // ms each print stays up
 
 /** The prints, in order. `print` overrides the lab's default effect settings. */
 const SCENES = [
-  { name: 'Arctic fjord', tone: 'mist', paint: paintArctic,
+  { name: 'Arctic fjord', tone: 'slate', paint: paintArctic,
     print: { tone: { contrast: 18 }, mono: { amount: 72 }, grain: { amount: 22, size: 2 } } },
-  { name: 'Seascape', tone: 'lilac', paint: paintSeascape,
+  { name: 'Seascape', tone: 'sepia', paint: paintSeascape,
     print: { tone: { contrast: 14 }, mono: { amount: 68 }, grain: { amount: 24, size: 2 } } },
-  { name: 'Mountain fog', tone: 'sage', paint: paintMountainFog,
+  { name: 'Mountain fog', tone: 'moss', paint: paintMountainFog,
     print: { tone: { contrast: 16 }, mono: { amount: 74 }, grain: { amount: 20, size: 2 } } },
-  { name: 'Pine forest', tone: 'sand', paint: paintPineForest,
+  { name: 'Pine forest', tone: 'brass', paint: paintPineForest,
     print: { tone: { contrast: 20 }, mono: { amount: 78 }, grain: { amount: 22, size: 2 } } },
-  { name: 'Harbour at night', tone: 'rose', paint: paintHarbourNight,
+  { name: 'Harbour at night', tone: 'oxblood', paint: paintHarbourNight,
     print: { tone: { contrast: 22 }, mono: { amount: 70 }, grain: { amount: 28, size: 2.5 } } },
 ];
 
@@ -181,4 +180,3 @@ show(0);
 setPlaying(playing);
 els.motion.addEventListener('click', () => setPlaying(!playing));
 document.addEventListener('visibilitychange', schedule);
-initThemeToggle(document.getElementById('theme-toggle'));

@@ -1,18 +1,20 @@
 /* ==========================================================
    Ashframe — shared design system (every page loads this)
 
-   Direction: "darkroom, in daylight". Pure white and true black,
-   neutral greys, and the photo as the loudest thing on the page.
-   Colour is used sparingly: five muted film tones that mark
+   Direction: "dark academia". Walnut-black paper, candle-cream ink,
+   a Cormorant Garamond serif for display type and a quiet grain and
+   vignette over the page. Colour is used sparingly: five muted
+   academia tones (oxblood, moss, brass, slate, sepia) that mark
    tools and effects as small swatches.
 
-   - Tokens live on :root. Dark mode only redefines tokens.
-   - Type: one family (Hanken Grotesk, self-hosted), sentence case.
+   - Tokens live on :root. The site is dark only; there is no light mode.
+   - Type: Cormorant Garamond (display) and Hanken Grotesk (UI), both
+     self-hosted, sentence case.
    - Photos are sharp-cornered; controls are soft (pills).
    - All motion is disabled under prefers-reduced-motion.
    ========================================================== */
 
-/* Self-hosted so the site makes no external requests. SIL OFL, see assets/fonts/OFL.txt */
+/* Self-hosted so the site makes no external requests. SIL OFL, see assets/fonts/OFL*.txt */
 @font-face {
   font-family: "Hanken Grotesk";
   src: url("../assets/fonts/hanken-grotesk-latin-wght.woff2") format("woff2");
@@ -21,25 +23,42 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("../assets/fonts/cormorant-garamond-latin-wght.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("../assets/fonts/cormorant-garamond-latin-wght-italic.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 :root {
   /* Neutrals */
-  --paper: #ffffff;     /* page background */
-  --ink: #000000;       /* primary text, primary buttons */
-  --backdrop: #f0f0f0;  /* behind photos */
-  --surface: #f7f7f7;   /* hover / subtle fills */
-  --line: #e2e2e2;      /* hairlines, slider tracks */
-  --muted: #666666;     /* secondary text: 5:1+ on every neutral above */
-  --faint: #b3b3b3;     /* decorative only, never for text */
+  --paper: #15110e;     /* page background (walnut black) */
+  --ink: #ede4d0;       /* primary text, primary buttons (candle cream) */
+  --backdrop: #0e0b09;  /* behind photos */
+  --surface: #201a15;   /* hover / subtle fills */
+  --line: #3b3128;      /* hairlines, slider tracks */
+  --muted: #a99a82;     /* secondary text: 6:1+ on every neutral above */
+  --faint: #5b4d40;     /* decorative only, never for text */
 
-  /* Film tones: the "slight colours". Swatches and accents only. */
-  --mist: #9db3c2;
-  --sage: #a9b8a0;
-  --rose: #d3b1a8;
-  --sand: #cbbf9f;
-  --lilac: #b5adc4;
+  /* Academia tones. Swatches and accents only. */
+  --oxblood: #8e3b35;
+  --moss: #6b7a4b;
+  --brass: #b8935a;
+  --slate: #4f6380;
+  --sepia: #9a7550;
 
   --font: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     sans-serif;
+  --serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
 
   /* Type scale (major third, 16px base) */
   --t-xs: 0.75rem;   /* 12 */
@@ -53,57 +72,7 @@
   --fast: 160ms;
   --slow: 420ms;
 
-  color-scheme: light;
-}
-
-/* Dark mode: the device setting decides, unless the theme toggle has set
-   data-theme on <html> (js/theme.js; an inline script in each page's <head>
-   applies the saved choice before first paint). Keep these two blocks equal. */
-:root[data-theme="dark"] {
-  --paper: #000000;
-  --ink: #f2f2f2;
-  --backdrop: #141414;
-  --surface: #1a1a1a;
-  --line: #2b2b2b;
-  --muted: #a0a0a0;
-  --faint: #4a4a4a;
   color-scheme: dark;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #000000;
-    --ink: #f2f2f2;
-    --backdrop: #141414;
-    --surface: #1a1a1a;
-    --line: #2b2b2b;
-    --muted: #a0a0a0;
-    --faint: #4a4a4a;
-    color-scheme: dark;
-  }
-}
-
-/* Artwork drawn for one theme only (the mascot). Same rule shape as above. */
-.for-dark {
-  display: none !important;
-}
-
-:root[data-theme="dark"] .for-dark {
-  display: block !important;
-}
-
-:root[data-theme="dark"] .for-light {
-  display: none !important;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .for-dark {
-    display: block !important;
-  }
-
-  :root:not([data-theme="light"]) .for-light {
-    display: none !important;
-  }
 }
 
 /* Smooth page-to-page morph (home → photo lab) where supported */
@@ -158,14 +127,34 @@ select {
 }
 
 :focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--brass);
   outline-offset: 3px;
   border-radius: 2px;
 }
 
 ::selection {
-  background: var(--mist);
-  color: #000;
+  background: var(--brass);
+  color: var(--paper);
+}
+
+/* Atmosphere: a fixed vignette and paper grain behind everything.
+   The rain canvas (home) and the content sit above them. */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+
+body::before {
+  background: radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 0.45));
+}
+
+body::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.06;
 }
 
 .visually-hidden {
@@ -192,12 +181,31 @@ select {
   text-decoration: none;
 }
 
-/* The mascot's face, a black-on-white disc that reads in both themes */
+/* The brand icon, a disc */
 .wordmark-icon {
   display: block;
   width: 1.6em;
   height: 1.6em;
   border-radius: 50%;
+}
+
+/* ---------- Fleuron: a centred ornament between hairlines ---------- */
+
+.fleuron {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--faint);
+  font-family: var(--serif);
+  line-height: 1;
+}
+
+.fleuron::before,
+.fleuron::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
 }
 
 /* ---------- Buttons ---------- */
@@ -249,7 +257,7 @@ select {
   background: var(--surface);
 }
 
-/* ---------- Round icon button (theme toggle, pause) ---------- */
+/* ---------- Round icon button (pause) ---------- */
 
 .icon-btn {
   display: inline-grid;
@@ -277,21 +285,6 @@ select {
   display: block;
   width: 18px;
   height: 18px;
-}
-
-/* Theme toggle: a half-filled circle that turns over when the theme flips */
-.theme-toggle svg {
-  transition: transform var(--slow) var(--ease);
-}
-
-:root[data-theme="dark"] .theme-toggle svg {
-  transform: rotate(180deg);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .theme-toggle svg {
-    transform: rotate(180deg);
-  }
 }
 
 @media (pointer: coarse) {

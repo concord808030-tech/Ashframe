@@ -22,14 +22,6 @@
   pointer-events: none;
 }
 
-/* ---------- Top bar: just the theme toggle ---------- */
-
-.home-bar {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 8px;
-}
-
 /* ---------- Intro ---------- */
 
 .intro {
@@ -238,7 +230,7 @@
   top: 10px;
   left: 12px;
   z-index: 1;
-  /* White with a soft shadow: readable on any part of the photo, in either theme */
+  /* White with a soft shadow: readable on any part of the photo */
   color: #ffffff;
   font-size: var(--t-xs);
   font-weight: 500;
