@@ -1,21 +1,26 @@
 /**
- * @file Home page: the slideshow of prints, the rain and the theme toggle.
+ * @file Home page: the slideshow of prints, the vignette and the rain.
  *
- * The hero shows five prints painted in code (js/scenes.js). Each one is
+ * The hero shows eight prints painted in code (js/scenes.js). Each one is
  * developed through the photo lab's own render pipeline, then "develops" on
  * screen over the previous one every few seconds. Prints are prepared ahead
  * of time in idle moments and cached, so a change of print is just a copy.
  *
- * One pause button stops both the slideshow and the rain (anything that moves
- * on its own for more than 5 seconds needs a pause control). With reduced
- * motion turned on, both start paused.
+ * The cat-and-camera vignette above the print blinks, swishes its tail and
+ * fires the camera's flash as each new print develops.
+ *
+ * One pause button stops the slideshow, the rain and the vignette (anything
+ * that moves on its own for more than 5 seconds needs a pause control). With
+ * reduced motion turned on, they all start paused.
  */
 
 import { render } from './pipeline.js';
 import { createState } from './state.js';
-import { paintArctic, paintSeascape, paintMountainFog, paintPineForest, paintHarbourNight } from './scenes.js';
+import {
+  paintLibrary, paintStudyWindow, paintCloister, paintSpires,
+  paintCandleDesk, paintGraveyard, paintObservatory, paintGallery,
+} from './scenes.js';
 import { createRain } from './rain.js';
-import { initThemeToggle } from './theme.js';
 import './fresh.js';
 
 const SEED = 1957;
@@ -23,17 +28,26 @@ const INTERVAL = 8000; // ms each print stays up
 
 /** The prints, in order. `print` overrides the lab's default effect settings. */
 const SCENES = [
-  { name: 'Arctic fjord', tone: 'mist', paint: paintArctic,
+  { name: 'Library at midnight', tone: 'slate', paint: paintLibrary,
     print: { tone: { contrast: 18 }, mono: { amount: 72 }, grain: { amount: 22, size: 2 } } },
-  { name: 'Seascape', tone: 'lilac', paint: paintSeascape,
-    print: { tone: { contrast: 14 }, mono: { amount: 68 }, grain: { amount: 24, size: 2 } } },
-  { name: 'Mountain fog', tone: 'sage', paint: paintMountainFog,
-    print: { tone: { contrast: 16 }, mono: { amount: 74 }, grain: { amount: 20, size: 2 } } },
-  { name: 'Pine forest', tone: 'sand', paint: paintPineForest,
-    print: { tone: { contrast: 20 }, mono: { amount: 78 }, grain: { amount: 22, size: 2 } } },
-  { name: 'Harbour at night', tone: 'rose', paint: paintHarbourNight,
-    print: { tone: { contrast: 22 }, mono: { amount: 70 }, grain: { amount: 28, size: 2.5 } } },
+  { name: 'Rain on the study window', tone: 'sepia', paint: paintStudyWindow,
+    print: { tone: { contrast: 16 }, mono: { amount: 70 }, grain: { amount: 24, size: 2 } } },
+  { name: 'The cloister', tone: 'moss', paint: paintCloister,
+    print: { tone: { contrast: 20 }, mono: { amount: 74 }, grain: { amount: 22, size: 2 } } },
+  { name: 'Spires at dusk', tone: 'brass', paint: paintSpires,
+    print: { tone: { contrast: 16 }, mono: { amount: 68 }, grain: { amount: 24, size: 2 } } },
+  { name: 'Candlelit desk', tone: 'oxblood', paint: paintCandleDesk,
+    print: { tone: { contrast: 14 }, mono: { amount: 70 }, grain: { amount: 26, size: 2 } } },
+  { name: 'Misty graveyard avenue', tone: 'slate', paint: paintGraveyard,
+    print: { tone: { contrast: 22 }, mono: { amount: 78 }, grain: { amount: 20, size: 2 } } },
+  { name: 'The old observatory', tone: 'sepia', paint: paintObservatory,
+    print: { tone: { contrast: 18 }, mono: { amount: 76 }, grain: { amount: 28, size: 2.5 } } },
+  { name: 'Portrait gallery', tone: 'moss', paint: paintGallery,
+    print: { tone: { contrast: 16 }, mono: { amount: 72 }, grain: { amount: 24, size: 2 } } },
 ];
+
+/** Plate numbers for the captions. */
+const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'];
 
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 250));
@@ -44,6 +58,7 @@ const els = {
   caption: document.getElementById('print-caption'),
   dots: document.getElementById('print-dots'),
   motion: document.getElementById('motion-toggle'),
+  vignette: document.querySelector('.vignette'),
 };
 
 /**
@@ -81,15 +96,15 @@ function developed(i) {
   return cache[i];
 }
 
-/** The photo lab card's thumbnail: the fjord again, visibly "edited". */
+/** The photo lab card's thumbnail: the library's lamp and desk, visibly "edited". */
 function paintThumb(source) {
   const canvas = document.getElementById('thumb');
   const crop = document.createElement('canvas');
   crop.width = 800;
   crop.height = 600;
-  const sh = source.height * 0.62;
+  const sh = source.height * 0.5;
   const sw = sh * (4 / 3);
-  crop.getContext('2d').drawImage(source, source.width * 0.42, source.height * 0.22, sw, sh, 0, 0, 800, 600);
+  crop.getContext('2d').drawImage(source, source.width * 0.5 - sw / 2, source.height * 0.25, sw, sh, 0, 0, 800, 600);
   render(crop, printState({
     tone: { contrast: 30 },
     mono: { amount: 70 },
@@ -126,13 +141,22 @@ function show(i) {
   if (current < 0 || reduceMotion.matches) prev.classList.remove('develop');
   else next.addEventListener('animationend', () => prev.classList.remove('develop'), { once: true });
 
+  fire();
   front = 1 - front;
   current = i;
-  els.caption.textContent = `${SCENES[i].name}. Generated and developed in your browser by Ashframe.`;
+  els.caption.textContent = `Plate ${ROMAN[i]} — ${SCENES[i].name}. Generated and developed in your browser by Ashframe.`;
   dots.forEach((dot, k) => dot.setAttribute('aria-current', String(k === i)));
 
   idle(() => developed((i + 1) % SCENES.length)); // get the next one ready
   schedule();
+}
+
+/** The camera's flash bulb goes off for every print after the first, unless paused. */
+function fire() {
+  if (!(playing && !reduceMotion.matches && current >= 0)) return;
+  els.vignette.classList.remove('fire');
+  void els.vignette.getBoundingClientRect(); // restart the animation
+  els.vignette.classList.add('fire');
 }
 
 function schedule() {
@@ -167,8 +191,9 @@ const rain = createRain(document.getElementById('rain'));
 function setPlaying(on) {
   playing = on;
   els.motion.innerHTML = on ? ICONS.pause : ICONS.play;
-  els.motion.setAttribute('aria-label', on ? 'Pause the slideshow and rain' : 'Play the slideshow and rain');
+  els.motion.setAttribute('aria-label', on ? 'Pause the slideshow, rain and cat' : 'Play the slideshow, rain and cat');
   els.motion.title = els.motion.getAttribute('aria-label');
+  els.vignette.classList.toggle('paused', !on);
   if (on) rain.play();
   else rain.pause();
   schedule();
@@ -181,4 +206,3 @@ show(0);
 setPlaying(playing);
 els.motion.addEventListener('click', () => setPlaying(!playing));
 document.addEventListener('visibilitychange', schedule);
-initThemeToggle(document.getElementById('theme-toggle'));

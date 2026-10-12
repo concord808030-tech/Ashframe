@@ -8,7 +8,7 @@ Ashframe is a static site: plain HTML, CSS and JavaScript ES modules. There is n
 
 | URL | File | What it is |
 | --- | --- | --- |
-| `/` | `index.html` + `css/home.css` + `js/home.js` | Home page: the title, a slideshow of five prints painted in code, rain in the background, and the list of tools. |
+| `/` | `index.html` + `css/home.css` + `js/home.js` | Home page: the title, a cat-and-camera vignette, a slideshow of eight prints painted in code, rain in the background, and the list of tools. |
 | `/lab/` | `lab/index.html` + `css/lab.css` + `js/lab.js` | The photo lab editor. |
 
 Every page also loads `css/base.css`, the shared design system. Pages in subfolders reference shared files with `../`. GitHub Pages serves `/Ashframe/` as the site root, so absolute paths like `/css/...` would break. Always use relative paths.
@@ -16,7 +16,7 @@ Every page also loads `css/base.css`, the shared design system. Pages in subfold
 ### Adding a tool
 
 1. Create `<tool>/index.html`. Load `../css/base.css` plus the tool's own CSS and JS.
-2. On the home page, turn the next "Unexposed" frame in `index.html` into a link to the tool. Give it a `--tone` swatch from the film tones in `base.css`.
+2. On the home page, turn the next "Unexposed" frame in `index.html` into a link to the tool. Give it a `--tone` swatch from the academia tones in `base.css`.
 3. Reuse `js/pipeline.js`, `js/image-io.js` and the effects where they fit. They know nothing about any page.
 
 ## Modules
@@ -31,22 +31,20 @@ lab/index.html ──► js/lab.js ──► js/state.js     effect definitions,
                                      ├─► js/rng.js         seeded random numbers
                                      └─► js/effects/*.js   one file per effect
 
-index.html ──► js/home.js ──► js/scenes.js       five procedural scenes
+index.html ──► js/home.js ──► js/scenes.js       eight procedural scenes
                    │
                    ├───────► js/pipeline.js     the same render() develops each print
                    └───────► js/rain.js         background rain
 
-every page ──► js/theme.js                       light/dark toggle
-           └──► js/fresh.js ──► sw.js           revalidate assets after a deploy
+every page ──► js/fresh.js ──► sw.js           revalidate assets after a deploy
 ```
 
 | File | Responsibility |
 | --- | --- |
 | `js/lab.js` | Builds the panel, holds the loaded image, schedules preview renders, runs the export. |
-| `js/home.js` | Runs the slideshow. It develops each scene through `render()`, prepares the next one in idle time and caches it, and drives the pause button for both the slideshow and the rain. It also paints the photo lab thumbnail. |
-| `js/scenes.js` | Five painters (arctic fjord, seascape, mountain fog, pine forest, harbour at night). Each returns an unprocessed canvas, uses a fixed seed and scales to any size. |
-| `js/rain.js` | Rain on a fixed canvas behind the page (`z-index: -1`), in the current `--ink` colour. It stops when paused or when the tab is hidden. |
-| `js/theme.js` | The light/dark toggle: saves the choice, sets `data-theme` on `<html>`, keeps `theme-color` in sync and fires a `themechange` event. |
+| `js/home.js` | Runs the slideshow. It develops each scene through `render()`, prepares the next one in idle time and caches it, and drives the pause button for both the slideshow and the rain. It also fires the vignette's camera flash and paints the photo lab thumbnail (a crop of the library scene, edited). |
+| `js/scenes.js` | Eight painters of dark academia scenes (library at midnight, rain on the study window, the cloister, spires at dusk, candlelit desk, misty graveyard avenue, the old observatory, portrait gallery). Each returns an unprocessed canvas, uses a fixed seed and scales to any size. |
+| `js/rain.js` | Rain on a fixed canvas behind the page (`z-index: -1`), in the `--ink` colour. It stops when paused or when the tab is hidden. |
 | `js/fresh.js`, `sw.js` | Registers a root service worker that refetches same-origin CSS, modules and images with `cache: 'no-cache'` (a cheap 304 when unchanged). GitHub Pages sends `max-age=600` and a normal reload only revalidates the HTML, so without it a deploy could show new HTML with stale CSS and JS for up to 10 minutes. It caches nothing. |
 | `js/state.js` | `EFFECTS` (every effect's sliders and defaults) and `createState()`. |
 | `js/pipeline.js` | `render(source, state, target)`. Draws the source and applies the enabled effects in a fixed order. |
@@ -125,7 +123,7 @@ To register it:
 - Every slider has a `<label>`. Its formatted value (e.g. "35%") goes in `aria-valuetext`. The visible `<output>` readout is `aria-hidden`, so screen readers don't announce the value twice.
 - Effect toggles use `role="switch"`, and each effect section is a `role="group"` named by its title.
 - The status bar is the page's only `aria-live` region.
-- Text uses only `--ink` or `--muted`. Both meet the 4.5:1 contrast ratio on every background, in light and dark mode. `--faint` and the film tones are for decoration only, never for text. Switched-off effects dim the sliders, not the text.
+- Text uses only `--ink` or `--muted`. Both meet the 4.5:1 contrast ratio on every background, on the dark palette. `--faint` and the academia tones are for decoration only, never for text. Switched-off effects dim the sliders, not the text.
 - The panel is `visibility: hidden` until `lab.js` has built it (`.panel.ready`). This prevents a layout shift on load.
 - On touch screens (`pointer: coarse`), text is larger and every control is at least 44px tall.
 - Everything works from the keyboard. Space/Enter on Compare, or the `\` key anywhere, shows the original.
@@ -133,24 +131,21 @@ To register it:
 
 ## Design system
 
-Everything visual comes from tokens on `:root` in `css/base.css`. Dark mode only redefines those tokens.
+Direction: dark academia. Everything visual comes from tokens on `:root` in `css/base.css`. The site is dark only: there is no light mode, no theme toggle and no `data-theme`. (A leftover `ashframe-theme` value in `localStorage` is ignored.)
 
-- **Theme:** the device setting decides until the user presses the toggle. After that, `data-theme="light|dark"` on `<html>` wins, and the choice is saved in `localStorage` under `ashframe-theme`. Every page has a one-line inline script in `<head>` that applies the saved choice before first paint. The dark tokens are written twice in `base.css`, once for `[data-theme="dark"]` and once for the system setting when no choice is saved. Keep the two blocks identical.
-
-- **Neutrals:** `--paper` (white or black), `--ink`, `--backdrop` (behind photos), `--surface`, `--line`, `--muted` and `--faint`. These use true white and true black, not tinted off-whites.
-- **Film tones:** `--mist`, `--sage`, `--rose`, `--sand` and `--lilac`. This is the "slight colour". It appears only as small swatches, one per tool and one per effect (the `tone` field in `EFFECTS`), and in the export progress bar. Never use it for text or large fills.
-- **Type:** one family, Hanken Grotesk, self-hosted in `assets/fonts/`. Use sentence case everywhere, with no all-caps labels. The home wordmark is the only display type.
+- **Neutrals:** `--paper` (walnut black), `--ink` (candle cream), `--backdrop` (behind photos), `--surface`, `--line`, `--muted` and `--faint`. They are warm and tinted, not pure black and white.
+- **Academia tones:** `--oxblood`, `--moss`, `--brass`, `--slate` and `--sepia`. This is the "slight colour". It appears only as small swatches, one per tool and one per effect (the `tone` field in `EFFECTS`), as the print dots, in the export progress bar and in thin brass hairlines. Never use it for text or large fills.
+- **Type:** two self-hosted families in `assets/fonts/`, both SIL OFL. Cormorant Garamond (a serif, upright and italic) is for display type, headings and the print captions. Hanken Grotesk is for the UI. Use sentence case everywhere, with no all-caps labels.
+- **Atmosphere:** `body::before` is a fixed vignette and `body::after` a fixed paper grain (an inline SVG noise tile), both behind the content. The rain canvas sits above them.
 - **Shape:** photos have sharp corners, while controls are soft (pill buttons, round slider thumbs).
-- **Mascot:** an original line-art character drawn with Gemini, stored in `assets/brand/`.
-  - `mascot.png` is the full illustration on the home page.
-  - `icon-*.png` is her face in a disc, used for the favicon, the lab header logo and the empty tool frame. `apple-touch-icon.png` is the iPhone home-screen icon.
-  - The light art is kept as a print, black ink on opaque white, and only the paper outside her silhouette is transparent.
-  - In dark mode the mascot has its own artwork, `mascot-dark.png`. Both images are in the page; the `.for-light` and `.for-dark` classes in `base.css` show the one that matches the theme, toggle included. (`<picture>` can't follow the toggle, since its media query only sees the device setting.) It's white line art derived from the light original: thin strokes become white, and the solid hair stays black with a white outline and shine. It has the same pixel size as `mascot.png`, so nothing moves when the theme changes. A simple CSS colour inversion would turn her into a photo negative, which is why dark mode uses separate art.
-  - The icon uses the same white-disc version in both themes for now. A dark icon can be added later the same way, as `icon-dark-*.png` at the same sizes.
+- **Logo:** `assets/brand/logo.svg` is a cat seal: the hero cat's head, scaled into a brass-ringed disc. The `icon-*.png` files and `apple-touch-icon.png` are PNG renders of it, used for the favicon and the lab header logo. The empty tool frame on the home page uses `logo.svg` directly. It is temporary art: regenerate the PNGs at the same sizes with Pillow if it changes.
+- **Vignette:** the home hero has an inline SVG of a cute black cat (big round cream eyes looking up, a rosy nose, a curled tail) on three books beside a bellows camera. It sits just above the plate's brass hairline, never on it. The cat's blink, glance and tail loops run continuously. The camera's flash fires each time a new print develops, but not for the first print, not while paused and not under reduced motion. `home.js` toggles the `.fire` class for the flash and `.paused` (from the pause button) to freeze the loops.
+- **Prints:** eight code-painted scenes (captioned "Plate I" to "Plate VIII"). The sepia tone is applied by a CSS `filter` on the home frame only, so the lab and exports are unaffected. A fleuron (inline SVG) divides the hero from the tools list.
 - **Motion:** there are few, deliberate moments.
   - The `.develop` reveal plays when a photo appears, like a print emerging in the developer tray. It's used for each print in the home slideshow (every 8 seconds, each one over the last) and for each photo loaded in the lab.
+  - The vignette's blink, glance and tail loops, and its flash as each new print develops.
   - Rain falls behind the home page.
-  - The slideshow and rain move on their own for more than 5 seconds, so one button pauses both (WCAG 2.2.2). With reduced motion on, they start paused.
+  - The slideshow, rain and vignette move on their own for more than 5 seconds, so one button pauses all of them (WCAG 2.2.2). With reduced motion on, they start paused.
   - The page morphs from home to the lab (`@view-transition`, with `view-transition-name: frame` on both photo areas). Browsers without support simply navigate normally.
   - The export progress bar shows while an export runs.
   - Everything else is a short response to input (hover, switch, thumb press).

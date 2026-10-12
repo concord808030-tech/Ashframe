@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 24" width="600" height="24" role="img" aria-label="Ornamental divider">
+  <title>Ornamental divider</title>
+  <g fill="none" stroke="#b8935a" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M40 12.5H262M338 12.5H560" stroke-width="1"/>
+    <g transform="translate(278 1) scale(1.1)">
+      <path d="M20 18C14 13 8 10 10 5C12 1 17 2 20 6C23 2 28 1 30 5C32 10 26 13 20 18Z" fill="#b8935a" fill-opacity="0.35" stroke-width="1.1"/>
+      <path d="M11 12C6 15 1 12 3 8M29 12C34 15 39 12 37 8" stroke-width="1.1"/>
+    </g>
+  </g>
+</svg>

@@ -4,7 +4,7 @@
  * A fixed full-viewport canvas behind everything (z-index -1). Opaque
  * surfaces like the photo frame sit above it, so the rain shows only in
  * the margins and behind text. Drops are thin slanted strokes in the
- * current --ink colour at low opacity, so they follow the theme.
+ * current --ink colour at low opacity.
  *
  * It costs almost nothing: ~1 drop per 9000 px², pixel ratio capped at 2,
  * and it stops entirely while the tab is hidden or motion is paused.
@@ -102,7 +102,6 @@ export function createRain(canvas) {
     if (document.hidden) stop();
     else if (wanted) play();
   });
-  document.addEventListener('themechange', readColor);
   addEventListener('resize', resize);
 
   readColor();

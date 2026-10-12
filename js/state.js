@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file Effect definitions and editor state.
  *
  * EFFECTS is the single source of truth for every effect's controls:
@@ -24,7 +24,7 @@ import { randomSeed } from './rng.js';
  * @typedef {object} EffectDef
  * @property {string} id        Must match a key in the pipeline ORDER list.
  * @property {string} label     Panel heading.
- * @property {string} tone      Film-tone swatch colour: a token name from base.css (mist, sage, rose, sand, lilac).
+ * @property {string} tone      Academia-tone swatch colour: a token name from base.css (slate, moss, oxblood, brass, sepia).
  * @property {boolean} enabled  Whether the effect starts switched on.
  * @property {ParamDef[]} params
  */
@@ -49,7 +49,7 @@ export const EFFECTS = [
   {
     id: 'tone',
     label: 'Tone',
-    tone: 'mist',
+    tone: 'slate',
     enabled: true,
     params: [
       { id: 'brightness', label: 'Brightness', min: -100, max: 100, step: 1, value: 0 },
@@ -59,7 +59,7 @@ export const EFFECTS = [
   {
     id: 'mono',
     label: 'Black & white',
-    tone: 'lilac',
+    tone: 'sepia',
     enabled: true,
     params: [
       { id: 'amount', label: 'Mix', min: 0, max: 100, step: 1, value: 100, unit: '%' },
@@ -68,7 +68,7 @@ export const EFFECTS = [
   {
     id: 'grain',
     label: 'Film grain',
-    tone: 'sand',
+    tone: 'brass',
     enabled: true,
     params: [
       { id: 'amount', label: 'Amount', min: 0, max: 100, step: 1, value: 22 },
@@ -78,7 +78,7 @@ export const EFFECTS = [
   {
     id: 'scanlines',
     label: 'Scanlines',
-    tone: 'sage',
+    tone: 'moss',
     enabled: false,
     params: [
       { id: 'density', label: 'Lines', min: 40, max: 600, step: 10, value: 240 },
@@ -89,7 +89,7 @@ export const EFFECTS = [
   {
     id: 'glitch',
     label: 'Glitch',
-    tone: 'rose',
+    tone: 'oxblood',
     enabled: false,
     params: [
       { id: 'slices', label: 'Slices', min: 0, max: 40, step: 1, value: 10 },

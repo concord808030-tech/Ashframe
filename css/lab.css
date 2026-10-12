@@ -3,7 +3,7 @@
 
    Layout: header bar, then the stage (photo on a grey backdrop)
    beside the control panel; stacked on narrow screens.
-   Each effect carries its own film-tone swatch (--tone, set
+   Each effect carries its own academia-tone swatch (--tone, set
    from EFFECTS in js/state.js).
    ========================================================== */
 
@@ -41,9 +41,10 @@ body {
 }
 
 .page-title {
-  font-size: var(--t-lg);
-  font-weight: 400;
-  letter-spacing: -0.02em;
+  font-family: var(--serif);
+  font-size: calc(var(--t-lg) * 1.2);
+  font-weight: 500;
+  letter-spacing: 0;
   white-space: nowrap;
 }
 
@@ -108,9 +109,10 @@ body {
 }
 
 .drop-title {
-  font-size: var(--t-xl);
-  font-weight: 400;
-  letter-spacing: -0.02em;
+  font-family: var(--serif);
+  font-size: calc(var(--t-xl) * 1.2);
+  font-weight: 500;
+  letter-spacing: 0;
 }
 
 .drop-sub {
@@ -124,7 +126,7 @@ body {
 }
 
 .drop:hover .drop-frame {
-  background-color: var(--mist);
+  background-color: var(--brass);
   transform: translateY(-2px);
 }
 
@@ -158,14 +160,14 @@ body {
   display: grid;
 }
 
-/* Export progress: a thin band of film tones drifting across the top */
+/* Export progress: a thin band of academia tones drifting across the top */
 .developing {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--mist), var(--sage), var(--rose), var(--sand), var(--mist));
+  background: linear-gradient(90deg, var(--slate), var(--moss), var(--oxblood), var(--brass), var(--slate));
   background-size: 200% 100%;
   animation: drift 1.2s linear infinite;
 }
@@ -207,9 +209,10 @@ body {
 
 .fx-title {
   margin: 0;
-  font-size: var(--t-md);
-  font-weight: 500;
-  letter-spacing: -0.01em;
+  font-family: var(--serif);
+  font-size: calc(var(--t-md) * 1.2);
+  font-weight: 600;
+  letter-spacing: 0;
 }
 
 /* Switch + swatch + title; the whole row toggles the effect */
@@ -241,8 +244,8 @@ body {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+  background: var(--ink);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.4);
   transition: transform var(--fast) var(--ease);
 }
 
@@ -425,7 +428,7 @@ input[type="range"]:active::-moz-range-thumb {
   }
 
   .fx-title {
-    font-size: var(--t-lg);
+    font-size: calc(var(--t-lg) * 1.2);
   }
 
   /* The whole label row is the tap target, not just the switch */

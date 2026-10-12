@@ -22,14 +22,6 @@
   pointer-events: none;
 }
 
-/* ---------- Top bar: just the theme toggle ---------- */
-
-.home-bar {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 8px;
-}
-
 /* ---------- Intro ---------- */
 
 .intro {
@@ -37,42 +29,131 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
   grid-template-areas:
-    "display display mascot"
-    "lede    cta     mascot";
+    "display display vignette"
+    "lede    cta     vignette";
   align-items: end;
   column-gap: 32px;
   row-gap: 24px;
   margin-bottom: var(--intro-gap);
 }
 
-/* The mascot stands at the right, her faded sweater resting on the photo's
-   top edge. She develops in just before the print does. */
-.mascot {
-  grid-area: mascot;
+/* The vignette stands at the right: a black cat on three old books beside a
+   folding camera, the desk line sitting just above the plate's brass hairline
+   (never on it). It develops in just before the print does. Line art in --ink. */
+.vignette {
+  grid-area: vignette;
   align-self: end;
   width: auto;
   height: clamp(220px, 24vw, 340px);
-  margin-bottom: calc(-1 * var(--intro-gap));
+  aspect-ratio: 360 / 400;
+  /* Pull it down toward the plate, but keep the desk line ~14px clear of the
+     brass hairline (outline-offset 10px) so the art never sits on it */
+  margin-bottom: calc(24px - var(--intro-gap));
+  overflow: visible;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   animation: develop 2s var(--ease) both;
 }
 
-/* The wordmark as the headline: huge, light, tightly set lowercase */
+.vignette .desk { stroke: var(--faint); }
+.vignette .cover { fill: var(--surface); }
+.vignette .solid { fill: #0b0908; }
+.vignette .body { stroke-width: 1.5; }
+.vignette .hair { stroke-width: 0.8; opacity: 0.55; }
+.vignette .band { stroke: var(--brass); stroke-width: 1.6; }
+.vignette .label { stroke: var(--brass); stroke-width: 0.8; }
+.vignette .nose { fill: #c98a80; stroke: none; }
+.vignette .inner-ear { fill: var(--slate); stroke: none; opacity: 0.8; }
+.vignette .eye { fill: var(--ink); stroke: none; }
+.vignette .pupil { fill: #0b0908; stroke: none; }
+.vignette .shine { fill: var(--ink); stroke: none; }
+.vignette .tail-rim { stroke: var(--ink); stroke-width: 12.5; }
+.vignette .tail { stroke: #0b0908; stroke-width: 9.5; }
+.vignette .glass { fill: #0b0908; stroke-width: 0.8; }
+.vignette .glint { fill: var(--ink); stroke: none; opacity: 0.7; }
+.vignette .bulb { fill: var(--ink); stroke: none; }
+.vignette .stem { stroke-width: 2; }
+
+/* A slow blink (about 150ms every 7s), a curious glance now and then,
+   and a lazy tail */
+.cat-eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blink 7s infinite;
+}
+
+.cat-pupils {
+  animation: glance 11s ease-in-out infinite;
+}
+
+.cat-tail {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+  animation: swish 5s ease-in-out infinite alternate;
+}
+
+/* The flash bulb bursts each time a new print develops (home.js adds .fire) */
+.vignette .flash {
+  opacity: 0;
+  fill: var(--brass);
+  fill-opacity: 0.25;
+  stroke: var(--brass);
+  stroke-width: 1.4;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.vignette.fire .flash {
+  animation: flash 0.9s ease-out;
+}
+
+.vignette.paused * {
+  animation-play-state: paused;
+}
+
+@keyframes blink {
+  0%, 97%, 100% { transform: scaleY(1); }
+  98.5% { transform: scaleY(0.1); }
+}
+
+@keyframes glance {
+  0%, 40%, 82%, 100% { transform: translateX(0); }
+  46%, 56% { transform: translateX(-3.5px); }
+  62%, 76% { transform: translateX(3.5px); }
+}
+
+@keyframes swish {
+  from { transform: rotate(-8deg); }
+  to { transform: rotate(8deg); }
+}
+
+@keyframes flash {
+  0% { opacity: 0; transform: scale(0.4); }
+  15% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.35); }
+}
+
+/* The wordmark as the headline: a large, light serif in lowercase */
 .display {
   grid-area: display;
-  font-size: clamp(4.5rem, 17vw, 14rem);
-  font-weight: 250;
-  line-height: 0.8;
-  letter-spacing: -0.065em;
-  /* optical correction: big light type sits visually right of the margin */
-  margin-left: -0.05em;
+  font-family: var(--serif);
+  font-size: clamp(4.5rem, 16vw, 13rem);
+  font-weight: 400;
+  line-height: 0.82;
+  letter-spacing: -0.03em;
+  /* optical correction: big type sits visually right of the margin */
+  margin-left: -0.04em;
 }
 
 .lede {
   grid-area: lede;
   max-width: 34ch;
-  font-size: var(--t-lg);
-  line-height: 1.4;
-  letter-spacing: -0.01em;
+  font-family: var(--serif);
+  font-size: clamp(1.25rem, 1.7vw, 1.5rem);
+  line-height: 1.35;
 }
 
 .cta {
@@ -85,11 +166,18 @@
 /* ---------- The print ---------- */
 
 .print {
-  margin: 0 0 clamp(56px, 8vw, 112px);
+  margin: 0 0 clamp(40px, 6vw, 80px);
 }
 
+/* A plate: warm-toned (on the wrapper, so .develop still works on the
+   canvases), with a thin brass hairline set off the photo like a mat. The
+   margin keeps the hairline inside the page; the photo box never changes size. */
 .print-frame {
   position: relative;
+  margin: 11px;
+  filter: sepia(0.35) saturate(0.9) contrast(1.02);
+  outline: 1px solid var(--brass);
+  outline-offset: 10px;
   aspect-ratio: 21 / 9;
   background: var(--backdrop);
   overflow: hidden;
@@ -117,21 +205,24 @@
   justify-content: space-between;
   align-items: center;
   gap: 8px 24px;
-  margin-top: 10px;
+  margin-top: 14px;
 }
 
 .print figcaption {
   color: var(--muted);
-  font-size: var(--t-xs);
+  font-family: var(--serif);
+  font-size: var(--t-md);
+  font-style: italic;
 }
 
 .print-controls {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 0 12px;
 }
 
-/* One film-tone dot per print; the current one grows into a ring */
+/* One academia-tone dot per print; the current one grows into a ring */
 .print-dots {
   display: flex;
   gap: 2px;
@@ -189,13 +280,33 @@
   }
 }
 
+/* ---------- Fleuron between the plate and the tools ---------- */
+
+.home > .fleuron {
+  margin-bottom: clamp(40px, 6vw, 80px);
+  color: var(--brass);
+}
+
+.fleuron svg {
+  width: 40px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.fleuron .tendril {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+}
+
 /* ---------- Tools: a strip of film frames ---------- */
 
 .tools h2 {
   margin-bottom: 20px;
-  font-size: var(--t-xl);
+  font-family: var(--serif);
+  font-size: 2rem;
   font-weight: 400;
-  letter-spacing: -0.02em;
 }
 
 .strip {
@@ -238,7 +349,7 @@
   top: 10px;
   left: 12px;
   z-index: 1;
-  /* White with a soft shadow: readable on any part of the photo, in either theme */
+  /* White with a soft shadow: readable on any part of the photo */
   color: #ffffff;
   font-size: var(--t-xs);
   font-weight: 500;
@@ -249,9 +360,9 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: var(--t-lg);
+  font-family: var(--serif);
+  font-size: var(--t-xl);
   font-weight: 500;
-  letter-spacing: -0.015em;
 }
 
 .frame-desc {
@@ -276,14 +387,11 @@
 .frame-empty .frame-thumb {
   background: transparent;
   border: 1px dashed var(--faint);
-}
-
-.frame-empty .frame-thumb {
   display: grid;
   place-items: center;
 }
 
-/* The mascot keeps the empty frame company until the next tool arrives */
+/* The seal keeps the empty frame company until the next tool arrives */
 .frame-icon {
   width: clamp(56px, 6vw, 88px);
   height: auto;
@@ -324,17 +432,17 @@
     grid-template-areas:
       "display display"
       "lede    lede"
-      "cta     mascot";
+      "cta     vignette";
     row-gap: 20px;
   }
 
-  .mascot {
+  .vignette {
     height: 170px;
   }
 
   /* Let the wordmark run the full width of the phone */
   .display {
-    font-size: 26vw;
+    font-size: 25vw;
   }
 
   .cta {
