@@ -29,6 +29,52 @@
       <h1 class="display">ashframe</h1>
       <p class="lede">A darkroom in your browser. Turn photos black and white, add grain and texture, and export them at full size. Nothing is uploaded.</p>
       <a class="btn btn-primary cta" href="lab/">Open the photo lab</a>
+      <!-- The vignette: a black cat on three old books beside a folding camera.
+           Colours come from css/home.css; Task 6 reuses these paths. -->
+      <svg class="vignette" viewBox="0 0 360 400" aria-hidden="true">
+        <g transform="translate(0 20)">
+          <path class="desk" d="M4 378H356"/>
+          <g class="books">
+            <rect class="cover" x="30" y="340" width="196" height="38" rx="3"/>
+            <rect class="cover" x="46" y="308" width="166" height="32" rx="3"/>
+            <rect class="cover" x="36" y="278" width="186" height="30" rx="3"/>
+            <path class="band" d="M44 340v38M50 340v38M206 340v38M212 340v38M60 308v32M198 308v32M50 278v30M56 278v30M202 278v30M208 278v30"/>
+            <rect class="label" x="104" y="350" width="52" height="18"/>
+            <path class="hair" d="M112 359h36M98 324h62M90 293h80"/>
+          </g>
+          <g class="cat">
+            <path class="cat-tail solid" d="M86 274C56 277 38 262 38 238C38 218 50 206 46 190C44 181 52 177 57 184C64 196 54 214 54 236C54 254 66 264 88 263Z"/>
+            <path class="solid body" d="M78 278C68 250 74 208 96 184C100 177 100 169 99 163C89 153 88 128 94 112L100 76L120 96Q131 92 142 96L162 78L166 112C172 128 171 152 161 163C160 170 161 177 166 184C188 208 194 250 182 278Z"/>
+            <path class="hair" d="M101 84L104 104M159 86L156 104M120 278C116 250 118 226 122 208M140 278C144 250 142 226 138 208M92 276C86 254 92 232 106 222M114 278Q121 273 128 278M132 278Q139 273 146 278M112 144L88 140M112 148L90 152M148 144L172 140M148 148L170 152"/>
+            <path class="nose" d="M126 138h8l-4 5z"/>
+            <g class="cat-eyes">
+              <path class="eye" d="M107 124Q116 116 125 124Q116 132 107 124ZM135 124Q144 116 153 124Q144 132 135 124Z"/>
+              <path class="pupil" d="M116 119.5v9M144 119.5v9"/>
+            </g>
+          </g>
+          <g class="flash">
+            <circle cx="246" cy="248" r="26"/>
+            <path d="M246 214v-14M212 248h-12M280 248h12M222 224l-9-9M270 224l9-9"/>
+          </g>
+          <g class="camera">
+            <path class="stem" d="M246 300V262"/>
+            <circle class="cover" cx="246" cy="248" r="14"/>
+            <circle class="hair" cx="246" cy="248" r="9"/>
+            <circle class="bulb" cx="246" cy="248" r="4.5"/>
+            <rect class="cover" x="236" y="300" width="38" height="78" rx="3"/>
+            <path class="hair" d="M236 314h38M236 364h38"/>
+            <rect class="cover" x="250" y="294" width="10" height="6" rx="1"/>
+            <rect class="cover" x="272" y="370" width="68" height="8" rx="1"/>
+            <path class="solid" d="M274 306L318 318V362L274 370Z"/>
+            <path class="hair" d="M283 308.5V368.4M292 310.9V366.7M301 313.4V365.1M310 315.8V363.5"/>
+            <rect class="cover" x="316" y="312" width="10" height="58" rx="1.5"/>
+            <circle class="cover" cx="326" cy="338" r="17"/>
+            <circle cx="326" cy="338" r="11"/>
+            <circle class="glass" cx="326" cy="338" r="6"/>
+            <circle class="glint" cx="323.5" cy="335.5" r="1.6"/>
+          </g>
+        </g>
+      </svg>
     </header>
 
     <figure class="print">
@@ -38,13 +84,17 @@
         <canvas aria-hidden="true"></canvas>
       </div>
       <div class="print-meta">
-        <figcaption id="print-caption">Arctic fjord. Generated and developed in your browser by Ashframe.</figcaption>
+        <figcaption id="print-caption">Plate I — Library at midnight. Generated and developed in your browser by Ashframe.</figcaption>
         <div class="print-controls">
           <div class="print-dots" id="print-dots" role="group" aria-label="Prints"></div>
           <button type="button" class="icon-btn" id="motion-toggle" aria-label="Pause the slideshow and rain"></button>
         </div>
       </div>
     </figure>
+
+    <div class="fleuron" aria-hidden="true">
+      <svg viewBox="0 0 40 20"><path d="M20 18C14 13 8 10 10 5C12 1 17 2 20 6C23 2 28 1 30 5C32 10 26 13 20 18Z"/><path class="tendril" d="M11 12C6 15 1 12 3 8M29 12C34 15 39 12 37 8"/></svg>
+    </div>
 
     <section class="tools" aria-labelledby="tools-title">
       <h2 id="tools-title">Tools</h2>
@@ -60,7 +110,7 @@
         </li>
         <li class="frame frame-empty">
           <span class="frame-no" aria-hidden="true">2</span>
-          <span class="frame-thumb"><img class="frame-icon" src="assets/brand/icon-192.png" width="96" height="96" alt=""></span>
+          <span class="frame-thumb"><img class="frame-icon" src="assets/brand/logo.svg" width="96" height="96" alt=""></span>
           <span class="frame-name">Unexposed</span>
           <span class="frame-desc">The next tool is in development.</span>
         </li>

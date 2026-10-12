@@ -1,14 +1,17 @@
 /**
- * @file Home page: the slideshow of prints, and the rain.
+ * @file Home page: the slideshow of prints, the vignette and the rain.
  *
  * The hero shows eight prints painted in code (js/scenes.js). Each one is
  * developed through the photo lab's own render pipeline, then "develops" on
  * screen over the previous one every few seconds. Prints are prepared ahead
  * of time in idle moments and cached, so a change of print is just a copy.
  *
- * One pause button stops both the slideshow and the rain (anything that moves
- * on its own for more than 5 seconds needs a pause control). With reduced
- * motion turned on, both start paused.
+ * The cat-and-camera vignette above the print blinks, swishes its tail and
+ * fires the camera's flash as each new print develops.
+ *
+ * One pause button stops the slideshow, the rain and the vignette (anything
+ * that moves on its own for more than 5 seconds needs a pause control). With
+ * reduced motion turned on, they all start paused.
  */
 
 import { render } from './pipeline.js';
@@ -43,6 +46,9 @@ const SCENES = [
     print: { tone: { contrast: 16 }, mono: { amount: 72 }, grain: { amount: 24, size: 2 } } },
 ];
 
+/** Plate numbers for the captions. */
+const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'];
+
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 250));
 
@@ -52,6 +58,7 @@ const els = {
   caption: document.getElementById('print-caption'),
   dots: document.getElementById('print-dots'),
   motion: document.getElementById('motion-toggle'),
+  vignette: document.querySelector('.vignette'),
 };
 
 /**
@@ -134,13 +141,22 @@ function show(i) {
   if (current < 0 || reduceMotion.matches) prev.classList.remove('develop');
   else next.addEventListener('animationend', () => prev.classList.remove('develop'), { once: true });
 
+  fire();
   front = 1 - front;
   current = i;
-  els.caption.textContent = `${SCENES[i].name}. Generated and developed in your browser by Ashframe.`;
+  els.caption.textContent = `Plate ${ROMAN[i]} — ${SCENES[i].name}. Generated and developed in your browser by Ashframe.`;
   dots.forEach((dot, k) => dot.setAttribute('aria-current', String(k === i)));
 
   idle(() => developed((i + 1) % SCENES.length)); // get the next one ready
   schedule();
+}
+
+/** The camera's flash bulb goes off for every print after the first, unless paused. */
+function fire() {
+  if (!(playing && !reduceMotion.matches && current >= 0)) return;
+  els.vignette.classList.remove('fire');
+  void els.vignette.getBoundingClientRect(); // restart the animation
+  els.vignette.classList.add('fire');
 }
 
 function schedule() {
@@ -177,6 +193,7 @@ function setPlaying(on) {
   els.motion.innerHTML = on ? ICONS.pause : ICONS.play;
   els.motion.setAttribute('aria-label', on ? 'Pause the slideshow and rain' : 'Play the slideshow and rain');
   els.motion.title = els.motion.getAttribute('aria-label');
+  els.vignette.classList.toggle('paused', !on);
   if (on) rain.play();
   else rain.pause();
   schedule();
