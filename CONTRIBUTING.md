@@ -6,7 +6,7 @@ Thanks for helping out! Ashframe is deliberately small and dependency-free, so t
 
 - **No build step, no dependencies.** Plain HTML, CSS and ES modules only. The repo must keep working when served as-is from GitHub Pages.
 - **Images never leave the device.** No network requests, no external fonts or CDNs, no analytics.
-- **Elegant black and white UI.** Use the tokens in `css/base.css`. Colour comes only from the small film-tone swatches, and text is in sentence case. Any new animation must be disabled under `prefers-reduced-motion`. See [the design system](docs/ARCHITECTURE.md#design-system).
+- **Dark academia UI.** Use the tokens in `css/base.css`. Colour comes only from the small academia-tone swatches, and text is in sentence case. Any new animation must be disabled under `prefers-reduced-motion`. See [the design system](docs/ARCHITECTURE.md#design-system).
 - **Preview = export.** Effects must be resolution-independent and use the seeded `rand()`. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#writing-an-effect).
 
 ## Run it locally
