@@ -3,7 +3,7 @@
 
    Layout: header bar, then the stage (photo on a grey backdrop)
    beside the control panel; stacked on narrow screens.
-   Each effect carries its own film-tone swatch (--tone, set
+   Each effect carries its own academia-tone swatch (--tone, set
    from EFFECTS in js/state.js).
    ========================================================== */
 
@@ -160,7 +160,7 @@ body {
   display: grid;
 }
 
-/* Export progress: a thin band of film tones drifting across the top */
+/* Export progress: a thin band of academia tones drifting across the top */
 .developing {
   position: absolute;
   top: 0;

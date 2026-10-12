@@ -198,7 +198,6 @@ body::after {
   align-items: center;
   gap: 16px;
   color: var(--faint);
-  font-family: var(--serif);
   line-height: 1;
 }
 
@@ -296,7 +295,7 @@ body::after {
   }
 }
 
-/* ---------- Swatch: a film-tone dot that marks a tool or effect ---------- */
+/* ---------- Swatch: an academia-tone dot that marks a tool or effect ---------- */
 
 .swatch {
   display: inline-block;

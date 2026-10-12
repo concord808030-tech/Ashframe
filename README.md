@@ -37,8 +37,8 @@ The home page is the catalogue of tools. More will arrive in time.
 | Effect | Controls |
 | --- | --- |
 | Tone | Brightness, contrast |
-| Black & White | Mix (luminance-based, Rec. 709) |
-| Film Grain | Amount, size (midtone-weighted monochrome noise) |
+| Black & white | Mix (luminance-based, Rec. 709) |
+| Film grain | Amount, size (midtone-weighted monochrome noise) |
 | Scanlines | Line count, opacity, thickness |
 | Glitch | Slice count, shift, RGB channel split |
 

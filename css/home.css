@@ -200,11 +200,12 @@
 
 .print-controls {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 0 12px;
 }
 
-/* One film-tone dot per print; the current one grows into a ring */
+/* One academia-tone dot per print; the current one grows into a ring */
 .print-dots {
   display: flex;
   gap: 2px;
@@ -369,9 +370,6 @@
 .frame-empty .frame-thumb {
   background: transparent;
   border: 1px dashed var(--faint);
-}
-
-.frame-empty .frame-thumb {
   display: grid;
   place-items: center;
 }

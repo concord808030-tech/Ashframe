@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file Effect definitions and editor state.
  *
  * EFFECTS is the single source of truth for every effect's controls:
@@ -24,7 +24,7 @@ import { randomSeed } from './rng.js';
  * @typedef {object} EffectDef
  * @property {string} id        Must match a key in the pipeline ORDER list.
  * @property {string} label     Panel heading.
- * @property {string} tone      Film-tone swatch colour: a token name from base.css (slate, moss, oxblood, brass, sepia).
+ * @property {string} tone      Academia-tone swatch colour: a token name from base.css (slate, moss, oxblood, brass, sepia).
  * @property {boolean} enabled  Whether the effect starts switched on.
  * @property {ParamDef[]} params
  */

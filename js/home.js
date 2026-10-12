@@ -191,7 +191,7 @@ const rain = createRain(document.getElementById('rain'));
 function setPlaying(on) {
   playing = on;
   els.motion.innerHTML = on ? ICONS.pause : ICONS.play;
-  els.motion.setAttribute('aria-label', on ? 'Pause the slideshow and rain' : 'Play the slideshow and rain');
+  els.motion.setAttribute('aria-label', on ? 'Pause the slideshow, rain and cat' : 'Play the slideshow, rain and cat');
   els.motion.title = els.motion.getAttribute('aria-label');
   els.vignette.classList.toggle('paused', !on);
   if (on) rain.play();
