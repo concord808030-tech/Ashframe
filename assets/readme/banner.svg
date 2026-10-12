@@ -12,18 +12,24 @@
     .hair { stroke-width: 0.8; opacity: 0.55; }
     .band { stroke: #b8935a; stroke-width: 1.6; }
     .label { stroke: #b8935a; stroke-width: 0.8; }
-    .nose { fill: #a99a82; stroke: none; }
-    .eye { fill: #b8935a; stroke: none; }
-    .pupil { stroke: #0b0908; stroke-width: 2.2; }
+    .nose { fill: #c98a80; stroke: none; }
+    .inner-ear { fill: #4f6380; stroke: none; opacity: 0.8; }
+    .eye { fill: #ede4d0; stroke: none; }
+    .pupil { fill: #0b0908; stroke: none; }
+    .shine { fill: #ede4d0; stroke: none; }
+    .tail-rim { stroke: #ede4d0; stroke-width: 12.5; }
+    .tail-core { stroke: #0b0908; stroke-width: 9.5; }
     .glass { fill: #0b0908; stroke-width: 0.8; }
     .glint { fill: #ede4d0; stroke: none; opacity: 0.7; }
     .bulb { fill: #ede4d0; stroke: none; }
     .stem { stroke-width: 2; }
     .eyes { transform-box: fill-box; transform-origin: center; animation: blink 7s infinite; }
-    .tail { transform-box: fill-box; transform-origin: 95% 95%; animation: swish 5s ease-in-out infinite alternate; }
+    .tail { transform-box: fill-box; transform-origin: 0% 100%; animation: swish 5s ease-in-out infinite alternate; }
+    .pupils { animation: glance 11s ease-in-out infinite; }
     .flash { opacity: 0; fill: #b8935a; fill-opacity: 0.25; stroke: #b8935a; stroke-width: 1.4; transform-box: fill-box; transform-origin: center; animation: flash 6s ease-out 1.2s infinite; }
     @keyframes fall { from { transform: translate(0, 0); } to { transform: translate(-130px, 480px); } }
     @keyframes blink { 0%, 97%, 100% { transform: scaleY(1); } 98.5% { transform: scaleY(0.1); } }
+    @keyframes glance { 0%, 40%, 82%, 100% { transform: translateX(0); } 46%, 56% { transform: translateX(-3.5px); } 62%, 76% { transform: translateX(3.5px); } }
     @keyframes swish { from { transform: rotate(-8deg); } to { transform: rotate(8deg); } }
     @keyframes flash { 0% { opacity: 0; transform: scale(0.4); } 2.5% { opacity: 1; transform: scale(1); } 15%, 100% { opacity: 0; transform: scale(1.35); } }
     @media (prefers-reduced-motion: reduce) { * { animation: none; } }
@@ -96,13 +102,25 @@
       <path class="band" d="M44 340v38M50 340v38M206 340v38M212 340v38M60 308v32M198 308v32M50 278v30M56 278v30M202 278v30M208 278v30"/>
       <rect class="label" x="104" y="350" width="52" height="18"/>
       <path class="hair" d="M112 359h36M98 324h62M90 293h80"/>
-      <path class="tail solid" d="M86 274C56 277 38 262 38 238C38 218 50 206 46 190C44 181 52 177 57 184C64 196 54 214 54 236C54 254 66 264 88 263Z"/>
-      <path class="solid body" d="M78 278C68 250 74 208 96 184C100 177 100 169 99 163C89 153 88 128 94 112L100 76L120 96Q131 92 142 96L162 78L166 112C172 128 171 152 161 163C160 170 161 177 166 184C188 208 194 250 182 278Z"/>
-      <path class="hair" d="M101 84L104 104M159 86L156 104M120 278C116 250 118 226 122 208M140 278C144 250 142 226 138 208M92 276C86 254 92 232 106 222M114 278Q121 273 128 278M132 278Q139 273 146 278M112 144L88 140M112 148L90 152M148 144L172 140M148 148L170 152"/>
-      <path class="nose" d="M126 138h8l-4 5z"/>
+      <g class="tail">
+        <path class="tail-rim" d="M168 268C198 262 210 236 205 210C201 190 213 178 224 185C231 190 228 200 220 199"/>
+        <path class="tail-core" d="M168 268C198 262 210 236 205 210C201 190 213 178 224 185C231 190 228 200 220 199"/>
+      </g>
+      <path class="solid body" d="M100 184C87 210 78 244 80 268Q82 278 93 278H167Q178 278 180 268C182 244 173 210 160 184Z"/>
+      <path class="hair" d="M113 278V240M147 278V240M104 278Q112 270 121 278M139 278Q147 270 156 278"/>
+      <path class="solid body" d="M86 168C80 142 83 120 92 106L88 82L114 104Q130 99 146 104L173 84L168 108C177 122 180 144 174 168C166 189 147 195 130 195C113 195 94 189 86 168Z"/>
+      <path class="inner-ear" d="M93 90L98 106L109 103ZM168 92L164 107L153 103Z"/>
+      <path class="hair" d="M93 171L72 166M93 176L74 179M167 171L188 166M167 176L186 179M126 177Q130 181 130 177Q130 181 134 177"/>
+      <path class="nose" d="M126 168h8l-4 4.5z"/>
       <g class="eyes">
-        <path class="eye" d="M107 124Q116 116 125 124Q116 132 107 124ZM135 124Q144 116 153 124Q144 132 135 124Z"/>
-        <path class="pupil" d="M116 119.5v9M144 119.5v9"/>
+        <ellipse class="eye" cx="110" cy="149" rx="14.5" ry="16.5"/>
+        <ellipse class="eye" cx="150" cy="149" rx="14.5" ry="16.5"/>
+        <g class="pupils">
+          <circle class="pupil" cx="111" cy="144" r="7.5"/>
+          <circle class="pupil" cx="151" cy="144" r="7.5"/>
+          <circle class="shine" cx="114.5" cy="140.5" r="2.2"/>
+          <circle class="shine" cx="154.5" cy="140.5" r="2.2"/>
+        </g>
       </g>
       <g class="flash">
         <circle cx="246" cy="248" r="26"/>

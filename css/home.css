@@ -38,15 +38,17 @@
 }
 
 /* The vignette stands at the right: a black cat on three old books beside a
-   folding camera, the desk line resting on the plate's brass hairline. It
-   develops in just before the print does. Engraved line art in --ink. */
+   folding camera, the desk line sitting just above the plate's brass hairline
+   (never on it). It develops in just before the print does. Line art in --ink. */
 .vignette {
   grid-area: vignette;
   align-self: end;
   width: auto;
   height: clamp(220px, 24vw, 340px);
   aspect-ratio: 360 / 400;
-  margin-bottom: calc(-1 * var(--intro-gap));
+  /* Pull it down toward the plate, but keep the desk line ~14px clear of the
+     brass hairline (outline-offset 10px) so the art never sits on it */
+  margin-bottom: calc(24px - var(--intro-gap));
   overflow: visible;
   fill: none;
   stroke: var(--ink);
@@ -63,24 +65,33 @@
 .vignette .hair { stroke-width: 0.8; opacity: 0.55; }
 .vignette .band { stroke: var(--brass); stroke-width: 1.6; }
 .vignette .label { stroke: var(--brass); stroke-width: 0.8; }
-.vignette .nose { fill: var(--muted); stroke: none; }
-.vignette .eye { fill: var(--brass); stroke: none; }
-.vignette .pupil { stroke: #0b0908; stroke-width: 2.2; }
+.vignette .nose { fill: #c98a80; stroke: none; }
+.vignette .inner-ear { fill: var(--slate); stroke: none; opacity: 0.8; }
+.vignette .eye { fill: var(--ink); stroke: none; }
+.vignette .pupil { fill: #0b0908; stroke: none; }
+.vignette .shine { fill: var(--ink); stroke: none; }
+.vignette .tail-rim { stroke: var(--ink); stroke-width: 12.5; }
+.vignette .tail { stroke: #0b0908; stroke-width: 9.5; }
 .vignette .glass { fill: #0b0908; stroke-width: 0.8; }
 .vignette .glint { fill: var(--ink); stroke: none; opacity: 0.7; }
 .vignette .bulb { fill: var(--ink); stroke: none; }
 .vignette .stem { stroke-width: 2; }
 
-/* A slow blink (about 150ms every 7s) and a lazy tail */
+/* A slow blink (about 150ms every 7s), a curious glance now and then,
+   and a lazy tail */
 .cat-eyes {
   transform-box: fill-box;
   transform-origin: center;
   animation: blink 7s infinite;
 }
 
+.cat-pupils {
+  animation: glance 11s ease-in-out infinite;
+}
+
 .cat-tail {
   transform-box: fill-box;
-  transform-origin: 95% 95%;
+  transform-origin: 0% 100%;
   animation: swish 5s ease-in-out infinite alternate;
 }
 
@@ -106,6 +117,12 @@
 @keyframes blink {
   0%, 97%, 100% { transform: scaleY(1); }
   98.5% { transform: scaleY(0.1); }
+}
+
+@keyframes glance {
+  0%, 40%, 82%, 100% { transform: translateX(0); }
+  46%, 56% { transform: translateX(-3.5px); }
+  62%, 76% { transform: translateX(3.5px); }
 }
 
 @keyframes swish {
